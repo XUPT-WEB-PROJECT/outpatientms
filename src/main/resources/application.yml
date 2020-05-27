@@ -1,0 +1,76 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /xuptcd
+
+spring:
+  application:
+    name: outpatientms
+  datasource:
+    url: jdbc:mysql://49.233.166.221:3306/xuptcd_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&verifyServerCertificate=false&useSSL=true&allowMultiQueries=true&useAffectedRows=true
+    username: user
+    password: 654321
+    driver-class-name: com.alibaba.druid.proxy.DruidDriver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #druid连接池配置
+
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    # 配置监控统计拦截的filters,去掉监控界面sql无法统计，‘wall’用于防火墙
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    userGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 60s  # 数据库连接超时时间，2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
+    # 连接池配置，2.0中直接使用jedis或者lettuce配置连接池
+    jedis:
+      pool:
+        # 最大空闲连接数
+        max-idle: 500
+        # 最小空闲连接数
+        min-idle: 50
+        # 等待可用连接的最大时间，负数为不限制
+        max-wait:  -1s
+        # 最大活跃连接数，负数为不限制
+        max-active: -1
+
+# mybatis
+mybatis:
+  type-handlers-package: com.xupt.outpatientms.mapper.typeHandler
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.xupt.outpatientms.bean
+  configuration:
+    map-underscore-to-camel-case: true
+
+#Mapper
+mapper:
+  identity: MYSQL  # 主键自增回写方法,默认值MYSQL
+  mappers: tk.mybatis.mapper.common.Mapper
+  not-empty: true  # insert 和 update 中，是否判断字符串类型!=''
+
+pagehelper:
+  auto-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+
+
+#jwt:
+#  secret-key: sd1HF4S3TG41fSZD5F4ZD41F
+#  expire-time: 1d
