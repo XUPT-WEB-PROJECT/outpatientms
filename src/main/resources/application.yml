@@ -7,10 +7,10 @@ spring:
   application:
     name: outpatientms
   datasource:
-    url: jdbc:mysql://49.233.166.221:3306/xuptcd_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&verifyServerCertificate=false&useSSL=true&allowMultiQueries=true&useAffectedRows=true
+    url: jdbc:mysql://49.233.166.221:3306/xuptcd_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&verifyServerCertificate=false&useSSL=false&allowMultiQueries=true&useAffectedRows=true
     username: user
     password: 654321
-    driver-class-name: com.alibaba.druid.proxy.DruidDriver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
     #druid连接池配置
@@ -52,7 +52,7 @@ spring:
 # mybatis
 mybatis:
   type-handlers-package: com.xupt.outpatientms.mapper.typeHandler
-  mapper-locations: classpath:mybatis/mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.xupt.outpatientms.bean
   configuration:
     map-underscore-to-camel-case: true

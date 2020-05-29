@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.outpatientms.mapper.UserMapper">
+
+    <insert id="addUser" parameterType="com.xupt.outpatientms.bean.User" useGeneratedKeys="true">
+        INSERT INTO xuptcd_db.user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_name, user_tel, user_pwd
+            <if test="userGender!=null">
+                user_gender,
+            </if>
+            <if test="userAge!=null">
+                user_age,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{userName}, #{userTel}, #{userPwd},
+            <if test="userGender!=null">
+                #{userGender},
+            </if>
+            <if test="userAge!=null">
+                #{userAge},
+            </if>
+        </trim>
+        ;
+    </insert>
+
+    <select id="checkUserTelUnique">
+        SELECT count(*) FROM user WHERE userTel = #{userTel}
+    </select>
+
+</mapper>

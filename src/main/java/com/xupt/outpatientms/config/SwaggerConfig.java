@@ -31,7 +31,9 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("OutpatientMS API Doc")
-                .description("医疗门诊管理系统接口文档及测试页面")
+                .description("\n所有ErrCode定义如下："+
+                "0:操作成功\t1:操作失败\t2:未登录\t3:参数错误\t"+
+                "所有详细信息保存在errMsg中")
                 .version("1.0")
                 .build();
     }
