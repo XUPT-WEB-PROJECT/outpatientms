@@ -32,6 +32,12 @@ public class ResponseBuilder {
         this.data = data;
     }
 
+    public ResponseBuilder(ErrCodeEnum err, String errMsg, Object data) {
+        this.errCode = err.getErrCode();
+        this.errMsg = errMsg;
+        this.data = data;
+    }
+
     public String build(){
         return JSON.toJSONString(this);
     }

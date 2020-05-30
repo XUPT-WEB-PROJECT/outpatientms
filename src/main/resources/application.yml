@@ -71,6 +71,6 @@ pagehelper:
 
 
 
-#jwt:
-#  secret-key: sd1HF4S3TG41fSZD5F4ZD41F
-#  expire-time: 1d
+jwt:
+  secret-key: outpatientmsforxupt
+  expire-time: 3600
