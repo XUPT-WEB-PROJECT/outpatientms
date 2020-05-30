@@ -7,7 +7,7 @@
     <insert id="addUser" parameterType="com.xupt.outpatientms.bean.User" useGeneratedKeys="true">
         INSERT INTO xuptcd_db.user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            user_name, user_tel, user_pwd
+            user_name, user_tel, user_pwd,
             <if test="userGender!=null">
                 user_gender,
             </if>
@@ -30,5 +30,9 @@
     <select id="checkUserTelUnique">
         SELECT count(*) FROM user WHERE userTel = #{userTel}
     </select>
+
+    <update id="newAvatar">
+        UPDATE user SET user_avatar=#{avatarUrl} WHERE user_id=#{userId}
+    </update>
 
 </mapper>

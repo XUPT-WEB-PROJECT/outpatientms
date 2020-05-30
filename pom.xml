@@ -10,8 +10,9 @@
     </parent>
     <groupId>com.xupt</groupId>
     <artifactId>outpatientms</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>outpatientms</name>
+    <packaging>jar</packaging>
     <description>Outpatient Management System used Spring Boot</description>
 
     <properties>
@@ -115,6 +116,13 @@
             <version>1.2.68</version>
         </dependency>
 
+        <!--qinuyun-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>7.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -122,8 +130,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.xupt.outpatientms.OutpatientmsApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+
+
 
 </project>

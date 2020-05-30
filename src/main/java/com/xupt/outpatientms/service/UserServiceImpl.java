@@ -15,4 +15,15 @@ public class UserServiceImpl implements UserService{
     public int addUser(User user) {
         return userMapper.addUser(user);
     }
+
+    @Override
+    public int checkUserTelUnique(String userTel) {
+        return 0;
+    }
+
+    @Override
+    public int newAvatar(Integer userId, String avatarUrl) {
+        userMapper.newAvatar(userId, avatarUrl);
+        return 0;
+    }
 }

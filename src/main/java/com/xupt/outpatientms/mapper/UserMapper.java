@@ -10,4 +10,6 @@ public interface UserMapper {
 
     public int checkUserTelUnique(String userTel);
 
+    public int newAvatar(Integer userId, String avatarUrl);
+
 }
