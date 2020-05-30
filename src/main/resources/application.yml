@@ -69,7 +69,15 @@ pagehelper:
   support-methods-arguments: true
   params: count=countSql
 
-
+#短信服务的配置
+smsmsgs:
+  msgcode:
+    host: http://smsmsgs.market.alicloudapi.com
+    path: /smsmsgs
+    method: GET
+    appcode: 5103cd5a2a014011bab39c7838d146ac
+    sign: 1
+    skin: 1
 
 #jwt:
 #  secret-key: sd1HF4S3TG41fSZD5F4ZD41F

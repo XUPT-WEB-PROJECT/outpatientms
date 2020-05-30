@@ -64,7 +64,7 @@ public class UserController {
     }
 
     public String checkUserTelUnique(@Validated String userTel){
-
+        return "";
     }
 
 //    @ApiOperation(value = "newAvatar", notes = "更换头像")
