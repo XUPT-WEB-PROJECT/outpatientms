@@ -15,10 +15,10 @@ buildNumber.properties
 *.iws
 *.iml
 *.ipr
+.idea/workspace.xml
 
 HELP.md
 # !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-.idea/workspace.xml
 
