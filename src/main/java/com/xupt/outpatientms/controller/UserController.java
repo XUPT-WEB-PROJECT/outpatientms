@@ -124,6 +124,9 @@ public class UserController {
     )
     @RequestMapping(value = "newAvatar", method = RequestMethod.POST)
     public ResponseBuilder<Object> newAvatar(MultipartFile avatarFile, ServletRequest request){
+        if(avatarFile == null || avatarFile.isEmpty()){
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "请上传png、jpg或jpeg格式的图片");
+        }
         String filename = avatarFile.getOriginalFilename();
         if(filename == null || !filename.endsWith(".png")
                 &&!filename.endsWith(".jpg")
