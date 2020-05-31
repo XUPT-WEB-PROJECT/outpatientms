@@ -1,7 +1,9 @@
 package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.User;
+import com.xupt.outpatientms.dto.UserRegisterDTO;
 import com.xupt.outpatientms.mapper.UserMapper;
+import com.xupt.outpatientms.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
 
     @Override
-    public int addUser(User user) {
+    public int addUser(UserRegisterDTO user) {
         user.setUserPwd(DigestUtils.md5Hex(user.getUserPwd()));
         return userMapper.addUser(user);
     }
@@ -30,9 +32,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int newAvatar(Integer userId, String avatarUrl) {
-        userMapper.newAvatar(userId, avatarUrl);
-        return 0;
+    public int newAvatar(String userId, String avatarUrl) {
+        return userMapper.newAvatar(userId, avatarUrl);
     }
 
 }

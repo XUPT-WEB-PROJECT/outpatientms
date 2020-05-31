@@ -72,5 +72,5 @@ pagehelper:
 
 
 jwt:
-  secret-key: outpatientmsforxupt
+  secret-key: outpatientmsforxuptwsycly
   expire-time: 3600

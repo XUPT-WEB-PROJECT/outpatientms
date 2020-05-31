@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xupt.outpatientms.mapper.UserMapper">
 
-    <insert id="addUser" parameterType="com.xupt.outpatientms.bean.User" useGeneratedKeys="true">
+    <insert id="addUser" parameterType="com.xupt.outpatientms.dto.UserRegisterDTO" useGeneratedKeys="true">
         INSERT INTO xuptcd_db.user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             user_name, user_tel, user_pwd,
@@ -27,8 +27,8 @@
         ;
     </insert>
 
-    <select id="checkUserTelUnique">
-        SELECT count(*) FROM user WHERE userTel = #{userTel};
+    <select id="checkUserTelUnique" resultType="int">
+        SELECT count(*) FROM user WHERE user_tel = #{userTel};
     </select>
 
     <update id="newAvatar">

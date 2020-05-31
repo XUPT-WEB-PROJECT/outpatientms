@@ -24,6 +24,8 @@ public class JwtService {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
+    public static final String USER_JWT_KEY = "user_jwt_%s";
+
     /** 秘钥 */
     @Value("${jwt.secret-key}")
     private String secret;
@@ -31,8 +33,6 @@ public class JwtService {
     /** 过期时间(秒) */
     @Value("${jwt.expire-time}")
     private long expire;
-
-    private static final String USER_JWT_KEY = "user_jwt_%s";
 
     @Autowired
     private StringRedisTemplate redisTemplate;
