@@ -80,5 +80,5 @@ smsmsgs:
     skin: 1
 
 jwt:
-  secret-key: outpatientmsforxupt
+  secret-key: outpatientmsforxuptwsycly
   expire-time: 3600
