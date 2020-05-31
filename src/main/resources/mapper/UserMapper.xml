@@ -28,11 +28,15 @@
     </insert>
 
     <select id="checkUserTelUnique">
-        SELECT count(*) FROM user WHERE userTel = #{userTel}
+        SELECT count(*) FROM user WHERE userTel = #{userTel};
     </select>
 
     <update id="newAvatar">
-        UPDATE user SET user_avatar=#{avatarUrl} WHERE user_id=#{userId}
+        UPDATE user SET user_avatar=#{avatarUrl} WHERE user_id=#{userId};
     </update>
+
+    <select id="login" resultType="com.xupt.outpatientms.bean.User">
+        SELECT * FROM user WHERE user_tel = #{userTel} AND user_pwd = #{userPwd};
+    </select>
 
 </mapper>

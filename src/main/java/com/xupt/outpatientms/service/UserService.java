@@ -9,7 +9,9 @@ public interface UserService {
 
     public int addUser(@Param("user")User user);
 
-    public int checkUserTelUnique(@Param("userTel")String userTel);
+    public User login(@Param("userTel")String userTel, @Param("userPwd")String userPwd);
+
+    public boolean checkUserTelUnique(@Param("userTel")String userTel);
 
     public int newAvatar(@Param("userId")Integer userId, @Param("avatarUrl")String avatarUrl);
 

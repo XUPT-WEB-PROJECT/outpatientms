@@ -8,6 +8,8 @@ public interface UserMapper {
 
     public int addUser(User user);
 
+    public User login(String userTel, String userPwd);
+
     public int checkUserTelUnique(String userTel);
 
     public int newAvatar(Integer userId, String avatarUrl);
