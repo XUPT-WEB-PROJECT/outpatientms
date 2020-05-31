@@ -71,7 +71,7 @@ public class QiniuCloudConfig {
     }
 
     /**
-     * 华东机房
+     * 华南机房
      */
     @Bean
     public com.qiniu.storage.Configuration qiniuConfig() {

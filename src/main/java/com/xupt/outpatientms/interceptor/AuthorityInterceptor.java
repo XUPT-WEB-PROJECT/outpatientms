@@ -1,21 +1,30 @@
 package com.xupt.outpatientms.interceptor;
 
 
+import com.xupt.outpatientms.common.CurrentUserData;
+import com.xupt.outpatientms.service.JwtService;
+import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Component
 public class AuthorityInterceptor implements HandlerInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorityInterceptor.class);
 
-<<<<<<< Updated upstream
-=======
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -23,11 +32,37 @@ public class AuthorityInterceptor implements HandlerInterceptor {
     private JwtService jwtService;
 
     public AuthorityInterceptor() { }
-
->>>>>>> Stashed changes
+  
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("enter AuthorityInterceptor");
-        return true;
+
+        logger.info("in authority");
+
+        if (HttpMethod.OPTIONS.name().equals(request.getMethod())){
+            return true;
+        }
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.isNotEmpty(header)){
+            if (header.startsWith("Bearer ")){
+                String token = header.substring(7);
+                Optional<Claims> claimsOptional = jwtService.parseToken(token);
+                //合法 token
+                if (claimsOptional.isPresent()){
+                    String userId = claimsOptional.get().getSubject();
+                    if (BooleanUtils.isTrue(redisTemplate.hasKey(String.format(JwtService.USER_JWT_KEY,userId)))){
+                        CurrentUserData currentUserData = new CurrentUserData();
+                        currentUserData.setUserId(userId);
+                        request.setAttribute("currentUser", currentUserData);
+                        return true;
+                    }
+                }
+            }
+
+        }
+
+        logger.warn("Wrong authorization: {}", header);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return false;
     }
+
 }

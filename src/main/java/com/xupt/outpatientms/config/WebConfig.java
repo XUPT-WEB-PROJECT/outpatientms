@@ -14,16 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-<<<<<<< Updated upstream
-        registry.addInterceptor(new AuthorityInterceptor())
-                .addPathPatterns("/*")
-                .excludePathPatterns("/user/register","/user/login")
-=======
         registry.addInterceptor(authorityInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/error")
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
->>>>>>> Stashed changes
                 .excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/webjars/**","/swagger-ui.html/**","/v2/**");
     }
 
