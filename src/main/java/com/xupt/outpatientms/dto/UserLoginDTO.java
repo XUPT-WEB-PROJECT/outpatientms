@@ -31,7 +31,8 @@ public class UserLoginDTO {
     public String toString() {
         return "User{" +
                 ", userTel='" + userTel + "'" +
-                ", userPwd='" + userPwd + "'" +
+//                ", userPwd='" + userPwd + "'" +
+                ", userPwd='" + "userPwd" + "'" +
                 "}";
     }
 
