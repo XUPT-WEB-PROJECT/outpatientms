@@ -67,6 +67,7 @@ public class UserController {
 
     }
 
+<<<<<<< Updated upstream
 //    @ApiOperation(value = "newAvatar", notes = "更换头像")
 //    @ApiImplicitParam(name = "avatar", dataType = "application/json", required = true,
 //                        paramType = "multipart/form-data", value = "新头像文件，仅接受png、jpg或jpeg格式")
@@ -93,5 +94,40 @@ public class UserController {
 //        }
 //        return new ResponseBuilder(errCode, errMsg).build();
 //    }
+=======
+    @ApiOperation(value = "更换头像", notes = "用户更换头像")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "avatarFile", required = true, paramType = "form",
+                    dataType = "file", value = "新头像文件，仅接受png、jpg或jpeg格式")
+    )
+    @RequestMapping(value = "newAvatar", method = RequestMethod.POST)
+    public ResponseBuilder<Object> newAvatar(MultipartFile avatarFile, ServletRequest request){
+        if(avatarFile == null || avatarFile.isEmpty()){
+            return new ResponseBuilder(ErrCodeEnum.ERR_ARG,"请上传png、jpg或jpeg格式的图片");
+        }
+        String filename = avatarFile.getOriginalFilename();
+        if(filename == null || !filename.endsWith(".png")
+                &&!filename.endsWith(".jpg")
+                &&!filename.endsWith(".jpeg")){
+            return new ResponseBuilder(ErrCodeEnum.ERR_ARG,"仅支持png、jpg或jpeg格式的图片");
+        }
+        Map re = null;
+        ResponseBuilder rb = null;
+        try {
+            re = qiniuService.uploadFile(avatarFile);
+        } catch (QiniuException e) {
+            e.printStackTrace();
+            rb = new ResponseBuilder(ErrCodeEnum.ERR_FAILED, "图片上传失败");
+        }
+        if(rb != null) return rb;
+        Integer errCode = (Integer) re.get("errCode");
+        String errMsg = (String)re.get("errMsg");
+        if(errCode == ErrCodeEnum.ERR_SUCCESS.getErrCode()){
+            String userId = ((CurrentUserData)request.getAttribute("currentUser")).getUserId();
+            userService.newAvatar(userId,(String)re.get("imageName"));
+        }
+        return new ResponseBuilder(errCode, errMsg);
+    }
+>>>>>>> Stashed changes
 
 }

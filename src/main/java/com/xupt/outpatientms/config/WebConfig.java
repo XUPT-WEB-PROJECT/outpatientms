@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.config;
 
 import com.xupt.outpatientms.interceptor.AuthorityInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,11 +9,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private AuthorityInterceptor authorityInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+<<<<<<< Updated upstream
         registry.addInterceptor(new AuthorityInterceptor())
                 .addPathPatterns("/*")
                 .excludePathPatterns("/user/register","/user/login")
+=======
+        registry.addInterceptor(authorityInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/error")
+                .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
+>>>>>>> Stashed changes
                 .excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/webjars/**","/swagger-ui.html/**","/v2/**");
     }
 
