@@ -39,4 +39,31 @@
         SELECT * FROM user WHERE user_tel = #{userTel} AND user_pwd = #{userPwd};
     </select>
 
+    <update id="updateUser" parameterType="com.xupt.outpatientms.dto.UserUpdateDTO">
+        UPDATE user SET
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="userTel!=null">
+                user_tel = #{userTel},
+            </if>
+            <if test="userGender!=null">
+                user_gender = #{userGender},
+            </if>
+            <if test="userAge!=null">
+                user_age = #{userAge},
+            </if>
+            <if test="newPwd!=null">
+                user_pwd = #{newPwd},
+            </if>
+        </trim>
+        WHERE user_id = #{userId}
+        <if test="newPwd!=null">
+            AND user_pwd = #{oldPwd}
+        </if>
+        ;
+    </update>
+
+    <select id="" resultType="com.xupt.outpatientms.vo.UserVO">
+        SELECT * FROM user WHERE user_id = #{userId};
+    </select>
+
 </mapper>

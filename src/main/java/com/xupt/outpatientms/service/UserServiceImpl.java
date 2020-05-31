@@ -2,6 +2,7 @@ package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.dto.UserRegisterDTO;
+import com.xupt.outpatientms.dto.UserUpdateDTO;
 import com.xupt.outpatientms.mapper.UserMapper;
 import com.xupt.outpatientms.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,18 @@ public class UserServiceImpl implements UserService{
     public boolean newAvatar(String userId, String avatarUrl) {
         return userMapper.newAvatar(Integer.valueOf(userId), avatarUrl) == 1;
     }
+
+    @Override
+    public boolean updateUser(UserUpdateDTO user) {
+        if(user.getNewPwd()!=null) user.setNewPwd(DigestUtils.md5Hex(user.getNewPwd()));
+        if(user.getOldPwd()!=null) user.setOldPwd(DigestUtils.md5Hex(user.getOldPwd()));
+        return userMapper.updateUser(user) == 1;
+    }
+
+    @Override
+    public UserVO getUserInfo(Integer userId) {
+        return userMapper.getUserInfo(userId);
+    }
+
 
 }
