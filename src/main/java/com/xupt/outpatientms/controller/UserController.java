@@ -106,9 +106,9 @@ public class UserController {
     @ApiOperation(value="检查手机号是否注册",
             notes = "检查手机号是否注册过用户账号，接口调用成功errCode=0，结果保存在data字段，否则错误信息返回至errMsg\n")
     @ApiImplicitParam(name = "userTel", required = true, paramType = "query",
-            value = "检查手机号是否注册过账号，\n返回json中data字段为0表示已注册，1表示未注册；请求信息eg:{\n" +
-                    "\"userTel\": \"15955897607\"}\n")
-    @RequestMapping(value = "checkUserTelUnique", method = RequestMethod.POST)
+            value = "检查手机号是否注册过账号，\n返回json中data字段为0表示已注册，1表示未注册；请求信息eg: \n" +
+                    "15955897607\n")
+    @RequestMapping(value = "checkUserTelUnique", method = RequestMethod.GET)
     public ResponseBuilder<Integer> checkUserTelUnique(String userTel){
         if(!userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
             return new ResponseBuilder(ErrCodeEnum.ERR_ARG, "手机号码格式错误");
