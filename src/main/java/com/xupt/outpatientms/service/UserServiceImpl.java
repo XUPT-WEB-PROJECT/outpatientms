@@ -32,8 +32,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int newAvatar(String userId, String avatarUrl) {
-        return userMapper.newAvatar(userId, avatarUrl);
+    public boolean newAvatar(String userId, String avatarUrl) {
+        return userMapper.newAvatar(Integer.valueOf(userId), avatarUrl) == 1;
     }
 
 }

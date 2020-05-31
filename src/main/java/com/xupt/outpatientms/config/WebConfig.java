@@ -15,8 +15,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authorityInterceptor)
-//                .addPathPatterns("/**")
+                .addPathPatterns("/**")
                 .excludePathPatterns("/error")
+                .excludePathPatterns("/pictureUpload")
                 .excludePathPatterns("/smsmsgs/sendCode/*")
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
                 .excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/webjars/**","/swagger-ui.html/**","/v2/**");

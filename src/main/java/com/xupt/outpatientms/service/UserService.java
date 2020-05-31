@@ -14,6 +14,6 @@ public interface UserService {
 
     public boolean checkUserTelUnique(@Param("userTel")String userTel);
 
-    public int newAvatar(@Param("userId")String userId, @Param("avatarUrl")String avatarUrl);
+    public boolean newAvatar(@Param("userId")String userId, @Param("avatarUrl")String avatarUrl);
 
 }

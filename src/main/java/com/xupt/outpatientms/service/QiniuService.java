@@ -29,10 +29,12 @@ public class QiniuService {
 
     private static final String bucket = "ylmzglxt";
 
+    private static final String baseUrl = "http://qax0m7o02.bkt.clouddn.com/";
+
     private StringMap putPolicy;
 
-    public Map uploadFile(File file) throws QiniuException {
-        Map map = new HashMap();
+    public Map<String,Object> uploadFile(File file) throws QiniuException {
+        Map<String,Object> map = new HashMap();
         Response response = this.uploadManager.put(file,null,getUploadToken());
         //解析上传的结果
         DefaultPutRet putRet = new Gson().fromJson(response.bodyString(),DefaultPutRet.class);
@@ -50,11 +52,11 @@ public class QiniuService {
             map.put("errCode",ErrCodeEnum.ERR_FAILED.getErrCode());
             map.put("errMsg",response.error);
         }
-        map.put("imgName",imageName);
+        map.put("imageUrl",baseUrl + imageName);
         return map;
     };
 
-    public Map uploadFile(MultipartFile multipartFile) throws QiniuException {
+    public Map<String, Object> uploadFile(MultipartFile multipartFile) throws QiniuException {
         File file = new File(QiniuCloudConfig.baseUploadUrl+multipartFile.getName());
         try {
             multipartFile.transferTo(file);

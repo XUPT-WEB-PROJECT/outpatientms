@@ -21,10 +21,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletRequest;
@@ -89,7 +86,7 @@ public class UserController {
     public ResponseBuilder<UserVO> login(@Validated @RequestBody UserLoginDTO user,
                         BindingResult bindingResult, HttpServletResponse response){
         if(bindingResult.hasErrors()){
-            return new ResponseBuilder(ErrCodeEnum.ERR_FAILED,"用户名或密码错误");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"用户名或密码错误");
         }
         User u = userService.login(user.getUserTel(),user.getUserPwd());
         if(u!=null){
@@ -97,9 +94,9 @@ public class UserController {
             Token token = jwtService.refreshToken(u.getUserId());
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
             response.setHeader("Authorization","Bearer "+token.getToken());
-            return new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS, "登录成功！", new UserVO(u));
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "登录成功！", new UserVO(u));
         }else{
-            return new ResponseBuilder(ErrCodeEnum.ERR_FAILED, "手机号或密码错误！");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "手机号或密码错误！");
         }
     }
 
@@ -111,19 +108,19 @@ public class UserController {
     @RequestMapping(value = "checkUserTelUnique", method = RequestMethod.GET)
     public ResponseBuilder<Integer> checkUserTelUnique(String userTel){
         if(!userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
-            return new ResponseBuilder(ErrCodeEnum.ERR_ARG, "手机号码格式错误");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "手机号码格式错误");
         }
-        if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS, "电话号码已存在", 0);
-        else return new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS, "该电话号码未注册", 1);
+        if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "电话号码已存在", 0);
+        else return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "该电话号码未注册", 1);
     }
 
-    @ApiOperation(value = "更换头像", notes = "用户更换头像")
+    @ApiOperation(value = "更换头像", notes = "医生或用户更换头像，成功则返回新头像URL")
     @ApiImplicitParams(
             @ApiImplicitParam(name = "avatarFile", required = true, paramType = "form",
                     dataType = "file", value = "新头像文件，仅接受png、jpg或jpeg格式")
     )
     @RequestMapping(value = "newAvatar", method = RequestMethod.POST)
-    public ResponseBuilder<Object> newAvatar(MultipartFile avatarFile, ServletRequest request){
+    public ResponseBuilder<String> newAvatar(@RequestParam("avatarFile") MultipartFile avatarFile, ServletRequest request){
         if(avatarFile == null || avatarFile.isEmpty()){
             return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "请上传png、jpg或jpeg格式的图片");
         }
@@ -131,24 +128,28 @@ public class UserController {
         if(filename == null || !filename.endsWith(".png")
                 &&!filename.endsWith(".jpg")
                 &&!filename.endsWith(".jpeg")){
-            return new ResponseBuilder(ErrCodeEnum.ERR_ARG,"仅支持png、jpg或jpeg格式的图片");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG,"仅支持png、jpg或jpeg格式的图片");
         }
-        Map re = null;
-        ResponseBuilder rb = null;
+        Map<String,Object> re = null;
+        ResponseBuilder<String> rb = null;
         try {
             re = qiniuService.uploadFile(avatarFile);
         } catch (QiniuException e) {
             e.printStackTrace();
-            rb = new ResponseBuilder(ErrCodeEnum.ERR_FAILED, "图片上传失败");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "图片上传失败");
         }
         if(rb != null) return rb;
         Integer errCode = (Integer) re.get("errCode");
         String errMsg = (String)re.get("errMsg");
+        String newAvatarUrl = (String)re.get("imageUrl");
         if(errCode == ErrCodeEnum.ERR_SUCCESS.getErrCode()){
             String userId = ((CurrentUserData)request.getAttribute("currentUser")).getUserId();
-            userService.newAvatar(userId,(String)re.get("imageName"));
+            if(!userService.newAvatar(userId,newAvatarUrl)){
+                return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "头像变更失败");
+            }
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "头像变更成功", newAvatarUrl);
         }
-        return new ResponseBuilder(errCode, errMsg);
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, errMsg);
     }
 
 }
