@@ -2,6 +2,7 @@ package com.xupt.outpatientms.bean;
 
 import com.xupt.outpatientms.enumeration.GenderEnum;
 import lombok.*;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class User implements Serializable {
     @Max(value = 120, message = "年龄在0~120之间")
     private Integer userAge;
 
+    @URL
     private String userAvatar;
 
     @Override

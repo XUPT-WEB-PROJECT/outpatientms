@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.vo;
 
 import com.xupt.outpatientms.bean.User;
+import com.xupt.outpatientms.dto.UserUpdateDTO;
 import com.xupt.outpatientms.enumeration.GenderEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,6 +31,12 @@ public class UserVO {
         this.userAge = u.getUserAge();
         this.userName = u.getUserName();
         this.userAvatar = u.getUserAvatar();
+        this.userGender = u.getUserGender();
+    }
+
+    public UserVO(UserUpdateDTO u) {
+        this.userTel = u.getUserTel();
+        this.userAge = u.getUserAge();
         this.userGender = u.getUserGender();
     }
 

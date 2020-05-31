@@ -2,6 +2,8 @@ package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.dto.UserRegisterDTO;
+import com.xupt.outpatientms.dto.UserUpdateDTO;
+import com.xupt.outpatientms.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,9 @@ public interface UserService {
     public boolean checkUserTelUnique(@Param("userTel")String userTel);
 
     public boolean newAvatar(@Param("userId")String userId, @Param("avatarUrl")String avatarUrl);
+
+    public boolean updateUser(@Param("user")UserUpdateDTO user);
+
+    public UserVO getUserInfo(Integer userId);
 
 }
