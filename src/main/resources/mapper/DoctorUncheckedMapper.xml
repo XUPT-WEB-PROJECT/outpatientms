@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.outpatientms.mapper.DoctorUncheckedMapper">
+
+    <insert id="add" parameterType="com.xupt.outpatientms.bean.DoctorUnchecked" useGeneratedKeys="true">
+        INSERT INTO xuptcd_db.doctor_unchecked
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            doctor_name, doctor_gender, department_name,doctor_title,doctor_tel,doctor_pwd,doctor_info,
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{doctorName}, #{doctorGender}, #{departmentName},#{doctorTitle},#{doctorTel},#{doctorPwd},#{doctorInfo},
+        </trim>
+        ;
+    </insert>
+
+    <!--<select id="checkUserTelUnique" resultType="int">-->
+        <!--SELECT count(*) FROM user WHERE user_tel = #{userTel};-->
+    <!--</select>-->
+
+    <!--<update id="newAvatar">-->
+        <!--UPDATE user SET user_avatar=#{avatarUrl} WHERE user_id=#{userId};-->
+    <!--</update>-->
+
+    <select id="selectAll" resultType="com.xupt.outpatientms.bean.DoctorUnchecked">
+        SELECT * FROM `doctor_unchecked`;
+    </select>
+
+    <delete id="deleteByDoctorTel" parameterType="String">
+        delete from `doctor_unchecked` where doctor_tel = #{doctorTel}
+    </delete>
+
+    <select id="selectByTel"  resultType="com.xupt.outpatientms.bean.DoctorUnchecked">
+        SELECT * FROM `doctor_unchecked` where doctor_tel = #{doctorTel}
+    </select>
+
+</mapper>

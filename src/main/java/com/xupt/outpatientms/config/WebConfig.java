@@ -20,6 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/pictureUpload")
                 .excludePathPatterns("/smsmsgs/sendCode/*")
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
+                .excludePathPatterns("/doctor/login","/doctor/review/**")
+                .excludePathPatterns("/doctorUnchecked/**")
                 .excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/webjars/**","/swagger-ui.html/**","/v2/**");
     }
 
