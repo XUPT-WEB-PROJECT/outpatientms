@@ -202,7 +202,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "获取用户信息", notes = "根据token获取当前用户信息。成功errCode = 0，用户信息返回至data字段，否则错误信息保存在errMsg中")
-    @RequestMapping(value = "newAvatar", method = RequestMethod.POST)
+    @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
     public ResponseBuilder<UserVO> getUserInfo(ServletRequest request){
         CurrentUserData userData = ((CurrentUserData)request.getAttribute("currentUser"));
         if(userData == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
