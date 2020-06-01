@@ -10,6 +10,7 @@ import com.xupt.outpatientms.dto.UserUpdateDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
 import com.xupt.outpatientms.service.JwtService;
 import com.xupt.outpatientms.service.QiniuService;
+import com.xupt.outpatientms.service.SmsMsgsService;
 import com.xupt.outpatientms.service.UserService;
 import com.xupt.outpatientms.util.ResponseBuilder;
 import com.xupt.outpatientms.vo.UserVO;
@@ -17,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -36,29 +38,39 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private JwtService jwtService;
 
     @Autowired
-    private JwtService jwtService;
+    private UserService userService;
 
     @Autowired
     private QiniuService qiniuService;
 
+    @Autowired
+    private SmsMsgsService smsMsgsService;
+
+
     @ApiOperation(value="用户注册",
-            notes = "用户注册接口,注册成功errCode=0，否则错误信息返回至errMsg\n")
-    @ApiImplicitParam(name = "user",dataType = "application/json", required = true,
-            value = "用户注册信息\neg:\n"+
-                    "{\n" +
-                    "    \"userTel\": \"15955897607\", \n" +
-                    "    \"userPwd\": \"123456\", \n" +
-                    "    \"userName\": \"kafm\", \n" +
-                    "    \"userGender\": \"女\"\n" +
-                    "}"
+            notes = "用户注册接口，需要先请求/smsmsgs/sendCode发送验证码并提交验证码，注册成功errCode=0，否则错误信息返回至errMsg\n")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "user",dataType = "application/json", required = true,
+                    value = "用户注册信息\neg:\n"+
+                            "{\n" +
+                            "    \"userTel\": \"15955897607\", \n" +
+                            "    \"userPwd\": \"123456\", \n" +
+                            "    \"userName\": \"kafm\", \n" +
+                            "    \"userGender\": \"女\", \n" +
+                            "    \"code\": \"xxx\"\n" +
+                            "}"
             )
+    })
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseBuilder<Object> register(@Validated @RequestBody UserRegisterDTO user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG,bindingResult.getFieldError().getDefaultMessage());
+        }
+        if(!smsMsgsService.check(user.getUserTel(), user.getCode())){
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"验证码错误");
         }
         int re = -1;
         ResponseBuilder<Object> rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"注册成功");
@@ -111,7 +123,7 @@ public class UserController {
     @RequestMapping(value = "checkUserTelUnique", method = RequestMethod.GET)
     public ResponseBuilder<Integer> checkUserTelUnique(String userTel){
         if(!userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
-            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "手机号码格式错误");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "手机号码有误");
         }
         if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "电话号码已存在", 0);
         else return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "该电话号码未注册", 1);

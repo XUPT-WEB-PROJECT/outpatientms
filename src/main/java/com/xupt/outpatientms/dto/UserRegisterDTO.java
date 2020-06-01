@@ -40,6 +40,12 @@ public class UserRegisterDTO {
     @Max(value = 120, message = "年龄在0~120之间")
     private Integer userAge;
 
+    @ApiModelProperty(value = "注册验证码")
+    @NotNull
+    @Size(min = 6, max = 6, message = "验证码错误")
+    private String code;
+
+
     @Override
     public String toString() {
         return "User{" +

@@ -1,5 +1,6 @@
 package com.xupt.outpatientms.controller;
 
+import com.xupt.outpatientms.bean.Department;
 import com.xupt.outpatientms.bean.Record;
 import com.xupt.outpatientms.service.UserRecordService;
 import com.xupt.outpatientms.util.ResponseBuilder;
@@ -8,12 +9,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "用户端挂号相关接口")
+import java.util.List;
+
 @RestController
 @RequestMapping("/userRecord")
+@Api(tags = "用户端挂号相关接口")
 public class UserRecordController {
 
     @Autowired
@@ -28,8 +30,12 @@ public class UserRecordController {
                     "\t\"userTel\": \"15955897607\",\n" +
                     "\t\"userPwd\": \"123456\"\n" +
                     "}\n")
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+//    @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseBuilder<Record> makeRecord(){
         return null;
+    }
+
+    public List<Department> choseDepartment() {
+        return userRecordService.choseDepartment();
     }
 }

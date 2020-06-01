@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authorityInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/error")
+                .excludePathPatterns("/unauthorized")
                 .excludePathPatterns("/pictureUpload")
                 .excludePathPatterns("/smsmsgs/sendCode/*")
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")

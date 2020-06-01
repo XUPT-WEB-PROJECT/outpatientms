@@ -62,8 +62,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         logger.warn("Wrong authorization: {}", header);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
+        response.sendRedirect("/xuptcd/unauthorized");
+        return true;
     }
 
 }
