@@ -1,4 +1,4 @@
-package com.xupt.outpatientms.bean;
+package com.xupt.outpatientms.dto;
 
 import com.xupt.outpatientms.enumeration.GenderEnum;
 import com.xupt.outpatientms.enumeration.RecordStatusEnum;
@@ -14,10 +14,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "预约挂号的订单信息")
-public class Record {
-
-    private String recordId;
+@ApiModel(description = "创建挂号单所需数据")
+public class RecordCreateDTO {
 
     @ApiModelProperty(value = "预约订单状态 0：未付款，1：待就诊，2：已就诊，3：已失效，4：已完成，5：已删除")
     private RecordStatusEnum recordStatus;
@@ -26,8 +24,8 @@ public class Record {
     @Past
     private Date recordCreateTime;
 
+    @ApiModelProperty(value = "预约就诊日期", required = true)
     @NotNull(message = "就诊日期不能为空！")
-    @ApiModelProperty(value = "预约就诊日期")
     @FutureOrPresent
     private Date recordDate;
 
@@ -65,8 +63,5 @@ public class Record {
     @Max(value = 120, message = "年龄在0~120之间")
     private Integer userAge;
 
-    @ApiModelProperty(value = "诊断结果")
-    @Size(min = 0, max = 250, message = "诊断结果250字以内")
-    private String medicalRecord;
 
 }
