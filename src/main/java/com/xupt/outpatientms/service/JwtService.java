@@ -74,12 +74,12 @@ public class JwtService {
     /**
      * 重新刷新token
      * */
-    public Token refreshToken(String userId){
+    public Token refreshToken(String id){
         Map<String, Object> claim = new HashMap<>();
-        claim.put("userId",userId);
+        claim.put("id",id);
         claim.put("createDate",System.currentTimeMillis());
-        Token token = new Token(generateToken(userId, claim),expire);
-        redisTemplate.opsForValue().set(String.format(USER_JWT_KEY,userId),userId,token.getExpire(), TimeUnit.SECONDS);
+        Token token = new Token(generateToken(id, claim),expire);
+        redisTemplate.opsForValue().set(String.format(USER_JWT_KEY,id),id,token.getExpire(), TimeUnit.SECONDS);
         return token;
     }
 

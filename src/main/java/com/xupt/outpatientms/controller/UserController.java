@@ -18,8 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindingResult;
@@ -83,7 +81,10 @@ public class UserController {
             if(e instanceof org.springframework.dao.DuplicateKeyException){
                 rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"该电话号码已被注册");
             }
-            else e.printStackTrace();
+            else {
+                e.printStackTrace();
+                rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"未知错误：" + e.getClass().getName());
+            }
         }
         return rb;
     }
@@ -125,7 +126,7 @@ public class UserController {
         if(!userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
             return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "手机号码有误");
         }
-        if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "电话号码已存在", 0);
+        if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "该电话号码已注册", 0);
         else return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "该电话号码未注册", 1);
     }
 
@@ -160,7 +161,7 @@ public class UserController {
         if(errCode == ErrCodeEnum.ERR_SUCCESS.getErrCode()){
             CurrentUserData userData = ((CurrentUserData)request.getAttribute("currentUser"));
             if(userData == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
-            String userId = userData.getUserId();
+            String userId = userData.getId();
             if(!userService.newAvatar(userId,newAvatarUrl)){
                 return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "头像变更失败");
             }
@@ -198,10 +199,10 @@ public class UserController {
         }
         CurrentUserData userData = ((CurrentUserData)request.getAttribute("currentUser"));
         if(userData == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
-        user.setUserId(userData.getUserId());
+        user.setUserId(userData.getId());
         try {
             if(userService.updateUser(user)){
-                return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "更新成功", new UserVO(user));
+                return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "更新成功", getUserInfo(request).getData());
             }
         }catch (DataAccessException e){
             if(e instanceof org.springframework.dao.DuplicateKeyException){
@@ -218,7 +219,7 @@ public class UserController {
     public ResponseBuilder<UserVO> getUserInfo(ServletRequest request){
         CurrentUserData userData = ((CurrentUserData)request.getAttribute("currentUser"));
         if(userData == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
-        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", userService.getUserInfo(Integer.valueOf(userData.getUserId())));
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", userService.getUserInfo(Integer.valueOf(userData.getId())));
     }
 
 }

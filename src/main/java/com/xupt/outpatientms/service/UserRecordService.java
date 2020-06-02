@@ -1,7 +1,7 @@
 package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.Department;
-import com.xupt.outpatientms.vo.DoctorChoseVO;
+import com.xupt.outpatientms.vo.UserChoseDoctorVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +11,5 @@ public interface UserRecordService {
 
     public List<Department> choseDepartment();
 
-    public List<DoctorChoseVO> choseDoctor(String date);
-
+    List<UserChoseDoctorVO> choseDoctor(String departmentName, String date);
 }

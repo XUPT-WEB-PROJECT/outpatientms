@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper {
 
-    public int addUser(@Param("user")UserRegisterDTO user);
+    public int addUser(UserRegisterDTO user);
 
     public User login(@Param("userTel")String userTel, @Param("userPwd")String userPwd);
 
@@ -18,7 +18,7 @@ public interface UserMapper {
 
     public int newAvatar(@Param("userId")Integer userId, @Param("avatarUrl")String avatarUrl);
 
-    public int updateUser(@Param("user")UserUpdateDTO user);
+    public int updateUser(UserUpdateDTO user);
 
     public UserVO getUserInfo(@Param("userId")Integer userId);
 

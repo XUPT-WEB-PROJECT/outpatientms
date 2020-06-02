@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/unauthorized")
                 .excludePathPatterns("/pictureUpload")
                 .excludePathPatterns("/smsmsgs/sendCode/*")
+                .excludePathPatterns("/admin/login")
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
                 .excludePathPatterns("/doctor/login","/doctor/review/**")
                 .excludePathPatterns("/doctorUnchecked/**")

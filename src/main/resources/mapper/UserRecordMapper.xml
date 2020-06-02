@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xupt.outpatientms.mapper.UserMapper">
+<mapper namespace="com.xupt.outpatientms.mapper.UserRecordMapper">
 
     <select id="choseDepartment" resultType="com.xupt.outpatientms.bean.Department">
-        SELECT * FROM xuptcd_db.department;
+        SELECT * FROM department;
     </select>
 
 </mapper>

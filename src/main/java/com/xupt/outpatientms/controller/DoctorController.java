@@ -40,7 +40,7 @@ public class DoctorController {
     public ResponseBuilder<DoctorVO> login(@Validated @RequestBody DoctorLoginDTO doctor,
                                          BindingResult bindingResult, HttpServletResponse response){
         if(bindingResult.hasErrors()){
-            return new ResponseBuilder(ErrCodeEnum.ERR_FAILED,"用户名或密码错误");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"用户名或密码错误");
         }
         Doctor d = doctorService.login(doctor.getDoctorTel(),doctor.getDoctorPwd());
         if(d!=null){
@@ -49,9 +49,9 @@ public class DoctorController {
             response.setHeader("Authorization","Bearer "+token.getToken());
             DoctorVO doctorVO = new DoctorVO();
             BeanUtils.copyProperties(d,doctorVO);
-            return new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS, "登录成功！",doctorVO);
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "登录成功！",doctorVO);
         }else{
-            return new ResponseBuilder(ErrCodeEnum.ERR_FAILED, "手机号或密码错误！");
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "手机号或密码错误！");
         }
     }
 
@@ -61,11 +61,11 @@ public class DoctorController {
     @RequestMapping(value = "review/{tel}", method = RequestMethod.POST)
     public ResponseBuilder<Object> review(@PathVariable("tel")String phone){
         boolean flag = doctorService.review(phone);
-        ResponseBuilder rb = null;
+        ResponseBuilder<Object> rb = null;
         if (flag){
-            rb = new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS,"审核成功！");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"审核成功！");
         }else {
-            rb = new ResponseBuilder(ErrCodeEnum.ERR_FAILED,"审核失败！");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"审核失败！");
         }
         return rb;
     }
