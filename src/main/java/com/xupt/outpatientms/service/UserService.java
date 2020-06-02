@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
-    public int addUser(@Param("user") UserRegisterDTO user);
+    public int addUser(UserRegisterDTO user);
 
-    public User login(@Param("userTel")String userTel, @Param("userPwd")String userPwd);
+    public User login(String userTel, String userPwd);
 
-    public boolean checkUserTelUnique(@Param("userTel")String userTel);
+    public boolean checkUserTelUnique(String userTel);
 
-    public boolean newAvatar(@Param("userId")String userId, @Param("avatarUrl")String avatarUrl);
+    public boolean newAvatar(String userId, String avatarUrl);
 
-    public boolean updateUser(@Param("user")UserUpdateDTO user);
+    public boolean updateUser(UserUpdateDTO user);
 
     public UserVO getUserInfo(Integer userId);
 

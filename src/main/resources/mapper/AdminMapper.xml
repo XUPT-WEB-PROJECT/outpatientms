@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.outpatientms.mapper.AdminMapper">
+
+    <select id="login" resultType="com.xupt.outpatientms.bean.Admin">
+        SELECT * FROM admin
+        WHERE admin_name = #{adminName} AND admin_pwd = #{adminPwd};
+    </select>
+
+    <select id="choseDepartment" resultType="com.xupt.outpatientms.bean.Department">
+        SELECT * FROM department;
+    </select>
+
+    <select id="choseDoctor" resultType="com.xupt.outpatientms.vo.AdminChoseDoctorVO">
+        SELECT * FROM doctor WHERE department_name = #{departmentName};
+    </select>
+
+    <select id="getSchedule" resultType="com.xupt.outpatientms.bean.Schedule">
+        SELECT * FROM schedule WHERE department_name = #{departmentName};
+    </select>
+
+    <select id="checkDepartment" resultType="int">
+        SELECT count(*) FROM department WHERE department_name = #{departmentName};
+    </select>
+
+    <insert id="addSchedule" parameterType="com.xupt.outpatientms.bean.Schedule">
+        INSERT INTO schedule (department_name, doctor_id, doctor_name, workday)
+        VALUES (#{departmentName}, #{doctorId}, #{doctorName}, #{workday});
+    </insert>
+
+    <delete id="delSchedule" parameterType="com.xupt.outpatientms.dto.ScheduleDTO">
+        DELETE FROM schedule
+        WHERE department_name = #{departmentName}
+                AND doctor_id = #{doctorId}
+                AND workday = #{doctorName}
+        ;
+    </delete>
+
+    <select id="checkSchedule" parameterType="com.xupt.outpatientms.dto.ScheduleDTO"
+            resultType="com.xupt.outpatientms.bean.Schedule">
+        SELECT department_name, doctor_id, doctor_name, #{workday} as workday
+        FROM doctor
+        WHERE doctor_id = #{doctorId} AND department_name = #{departmentName};
+    </select>
+
+</mapper>

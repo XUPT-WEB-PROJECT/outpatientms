@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DoctorVO {
+
     private String doctorName;//姓名
     private String departmentName;//所属科室，外键
     private String doctorTitle;//职称
     private String doctorPhoto;//头像url
     private String doctorTel;//电话号码
     private String doctorInfo;//医生简介
+
 }

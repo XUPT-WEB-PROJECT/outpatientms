@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class CurrentUserData {
 
     private Token token;
-    private String userId;
+    private String id;
 
 }

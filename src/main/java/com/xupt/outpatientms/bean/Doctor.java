@@ -1,6 +1,5 @@
 package com.xupt.outpatientms.bean;
 
-import com.alibaba.druid.filter.AutoLoad;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
