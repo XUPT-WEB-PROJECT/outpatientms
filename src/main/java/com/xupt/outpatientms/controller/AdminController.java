@@ -3,6 +3,7 @@ package com.xupt.outpatientms.controller;
 import com.xupt.outpatientms.bean.Admin;
 import com.xupt.outpatientms.bean.Department;
 import com.xupt.outpatientms.bean.Schedule;
+import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.common.Token;
 import com.xupt.outpatientms.dto.ScheduleDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
@@ -123,6 +124,15 @@ public class AdminController {
         int re = adminService.delSchedule(schedule);
         if(re == 0) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "参数有误");
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "删除成功", schedule);
+    }
+
+    @ApiOperation(value="查看所有用户信息",
+            notes = "接口调用成功errCode=0，信息返回在data字段，否则错误信息返回至errMsg\n")
+    @RequestMapping(value = "getAllUser", method = RequestMethod.GET)
+    public ResponseBuilder<List<User>> getAllUser(){
+        List<User> users = adminService.getAllUser();
+        for(User user : users) user.setUserPwd("");
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", users);
     }
 
 }

@@ -45,4 +45,8 @@
         WHERE doctor_id = #{doctorId} AND department_name = #{departmentName};
     </select>
 
+    <select id="getAllUser" parameterType="com.xupt.outpatientms.bean.User">
+        SELECT * FROM user;
+    </select>
+
 </mapper>
