@@ -1,7 +1,9 @@
 package com.xupt.outpatientms.mapper;
 
 import com.xupt.outpatientms.bean.Department;
+import com.xupt.outpatientms.bean.Feedback;
 import com.xupt.outpatientms.bean.Record;
+import com.xupt.outpatientms.dto.FeedbackDTO;
 import com.xupt.outpatientms.dto.RecordCreateDTO;
 import com.xupt.outpatientms.vo.UserChoseDoctorVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,9 +24,20 @@ public interface UserRecordMapper {
 
     Record getRecord(@Param("recordId") Integer recordId);
 
-    int payRecord(@Param("recordId")Integer recordId, @Param("order")Integer order);
+    int payRecord(Integer recordId, Integer order);
+
+    int updateRecordStatus(@Param("recordId")Integer recordId, @Param("order")Integer order,
+                           @Param("recordStatus")Integer recordStatus,
+                           @Param("previousStatus")Integer previousStatus);
 
     List<Record> listRecord(Integer userId);
 
     int checkExpireRecord(Integer userId);
+
+    int delRecord(Integer recordId, Integer userId);
+
+    Feedback setFeedback(FeedbackDTO feedback);
+
+    int commentRecord(Integer recordId, Integer userId);
+
 }

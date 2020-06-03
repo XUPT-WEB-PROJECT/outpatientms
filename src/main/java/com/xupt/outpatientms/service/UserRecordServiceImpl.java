@@ -2,12 +2,16 @@ package com.xupt.outpatientms.service;
 
 import com.github.pagehelper.PageHelper;
 import com.xupt.outpatientms.bean.Department;
+import com.xupt.outpatientms.bean.Feedback;
 import com.xupt.outpatientms.bean.Record;
+import com.xupt.outpatientms.dto.FeedbackDTO;
 import com.xupt.outpatientms.dto.RecordCreateDTO;
+import com.xupt.outpatientms.enumeration.RecordStatusEnum;
 import com.xupt.outpatientms.mapper.UserRecordMapper;
 import com.xupt.outpatientms.vo.UserChoseDoctorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,6 +60,27 @@ public class UserRecordServiceImpl implements UserRecordService {
     public List<Record> listRecord(Integer userId, int p, int size) {
         PageHelper.startPage(p,size);
         return userRecordMapper.listRecord(userId);
+    }
+
+    @Override
+    public int delRecord(Integer recordId, Integer userId) {
+        return userRecordMapper.delRecord(recordId, userId);
+    }
+
+
+    @Override
+    public Feedback setFeedback(FeedbackDTO feedback) {
+        return userRecordMapper.setFeedback(feedback);
+    }
+
+    @Override
+    @Transactional
+    public int commentRecord(Feedback feedback) {
+        int re = userRecordMapper.updateRecordStatus(feedback.getRecordId(), feedback.getUserId(),
+                RecordStatusEnum.RECORD_COMPLETED.value(),
+                RecordStatusEnum.RECORD_COMMENTING.value());
+        if(re == 0) return re;
+        return userRecordMapper.commentRecord(feedback.getRecordId(), feedback.getUserId());
     }
 
 }

@@ -3,14 +3,17 @@ package com.xupt.outpatientms.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xupt.outpatientms.bean.Department;
+import com.xupt.outpatientms.bean.Feedback;
 import com.xupt.outpatientms.bean.Record;
 import com.xupt.outpatientms.common.CurrentUserData;
+import com.xupt.outpatientms.dto.FeedbackDTO;
 import com.xupt.outpatientms.dto.RecordCreateDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
 import com.xupt.outpatientms.enumeration.RecordStatusEnum;
 import com.xupt.outpatientms.enumeration.TimeEnum;
 import com.xupt.outpatientms.service.UserRecordService;
 import com.xupt.outpatientms.util.ResponseBuilder;
+import com.xupt.outpatientms.vo.FeedbackVO;
 import com.xupt.outpatientms.vo.UserChoseDoctorVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -223,19 +226,62 @@ public class UserRecordController {
     @ApiOperation(value="用户查询自己的预约记录",
             notes = "用户查询预约记录，接口调用成功errCode=0，数据返回在data字段，否则错误信息返回至errMsg\n")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "p", value = "第几页 >0"),
-            @ApiImplicitParam(name = "size", value = "每页的大小")
+            @ApiImplicitParam(name = "p", value = "第几页", required = true),
+            @ApiImplicitParam(name = "size", value = "每页的大小", required = true)
     })
     @RequestMapping(value = "listRecord", method = RequestMethod.POST)
     public ResponseBuilder<PageInfo<Record>> listRecord(int p, int size, ServletRequest request){
         CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
         if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
         int id = Integer.parseInt(data.getId());
-        System.out.println(userRecordService.checkExpireRecord(id));
+        userRecordService.checkExpireRecord(id);
         List<Record> recordList = userRecordService.listRecord(id,p,size);
         PageInfo<Record> pageInfo = new PageInfo<>(recordList);
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", pageInfo);
     }
 
+    @ApiOperation(value="用户删除自己的预约记录",
+            notes = "用户删除预约记录，接口调用成功errCode=0，否则错误信息返回至errMsg\n")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "recordId", value = "recordId", required = true),
+    })
+    @RequestMapping(value = "delRecord", method = RequestMethod.POST)
+    public ResponseBuilder<Object> delRecord(Integer recordId, ServletRequest request){
+        CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
+        if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
+        int id = Integer.parseInt(data.getId());
+        int re = userRecordService.delRecord(recordId, id);
+        if(re == 0) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "删除成功");
+    }
 
+    @ApiOperation(value="用户评价",
+            notes = "用户对就诊体验进行评价，接口调用成功errCode=0，评价信息返回至data，否则错误信息返回至errMsg\n")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "feedback", dataType = "application/json",
+                    value = "评论订单所需信息\nfeedbackRating与recordId为必选项，feedbackInfo为可选项\n" +
+                    "eg:\n" +
+                    "{\n" +
+                    "\t\"feedbackRating\": \"5\",\n" +
+                    "\t\"recordId\": \"5\"\n" +
+                    "}\n")
+    })
+    @RequestMapping(value = "commentRecord", method = RequestMethod.POST)
+    public ResponseBuilder<FeedbackVO> commentRecord(@Validated @RequestBody FeedbackDTO feedback,
+                                                     BindingResult bindingResult, ServletRequest request){
+        if (bindingResult.hasErrors()) {
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, bindingResult.getFieldError().getDefaultMessage());
+        }
+        CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
+        if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
+        int userId = Integer.parseInt(data.getId());
+        feedback.setUserId(userId);
+        Feedback f = userRecordService.setFeedback(feedback);
+        BeanUtils.copyProperties(feedback, f);
+        f.setFeedbackTime(new Date());
+        if(f.getFeedbackInfo() == null) f.setFeedbackInfo("未评论");
+        int re = userRecordService.commentRecord(f);
+        if(re == 0) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "评论成功");
+    }
 }
