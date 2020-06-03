@@ -1,11 +1,14 @@
 package com.xupt.outpatientms.service;
 
+import com.xupt.outpatientms.bean.Record;
 import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.dto.UserRegisterDTO;
 import com.xupt.outpatientms.dto.UserUpdateDTO;
 import com.xupt.outpatientms.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface UserService {
