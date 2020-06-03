@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "患者所见的医生信息")
 public class UserChoseDoctorVO {
 
+    @ApiModelProperty(value = "doctorId")
+    private String doctorId;//姓名
+
     @ApiModelProperty(value = "医生姓名")
     private String doctorName;//姓名
 
@@ -28,7 +31,10 @@ public class UserChoseDoctorVO {
     @ApiModelProperty(value = "医生简介")
     private String doctorInfo;//医生简介
 
-    @ApiModelProperty(value = "当日尚存预约名额")
-    private Integer curQuota;//当日预约名额
+    @ApiModelProperty(value = "上午剩余预约名额")
+    private Integer amQuota;
+
+    @ApiModelProperty(value = "下午剩余预约名额")
+    private Integer pmQuota;
 
 }

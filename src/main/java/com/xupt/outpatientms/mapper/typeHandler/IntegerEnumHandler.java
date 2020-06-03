@@ -3,6 +3,7 @@ package com.xupt.outpatientms.mapper.typeHandler;
 import com.xupt.outpatientms.enumeration.BaseEnum;
 import com.xupt.outpatientms.enumeration.GenderEnum;
 import com.xupt.outpatientms.enumeration.RecordStatusEnum;
+import com.xupt.outpatientms.enumeration.TimeEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @MappedJdbcTypes(JdbcType.TINYINT)
-@MappedTypes({GenderEnum.class, RecordStatusEnum.class})
+@MappedTypes({GenderEnum.class, RecordStatusEnum.class, TimeEnum.class})
 public class IntegerEnumHandler<T extends BaseEnum> extends BaseTypeHandler<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(IntegerEnumHandler.class);

@@ -9,12 +9,73 @@
     </select>
 
     <select id="choseDoctor" resultType="com.xupt.outpatientms.vo.UserChoseDoctorVO">
-        SELECT doctor_name, doctor_gender, doctor_title, doctor_photo, doctor_info, doctor_quota AS 'curQuota'
+        SELECT
+               doctor_id        AS "doctorId",
+               doctor_name      AS "doctorName",
+               doctor_gender    AS "doctorGender",
+               doctor_title     AS "doctorTitle",
+               doctor_photo     AS "doctorPhoto",
+               doctor_info      AS "doctorInfo",
+               doctor_quota     AS "amQuota"
         FROM doctor
         WHERE doctor_id IN
               (SELECT doctor_id
                 FROM schedule
                 WHERE workday = #{workday})
+        ;
+    </select>
+    
+    <select id="setRecord" parameterType="com.xupt.outpatientms.dto.RecordCreateDTO"
+            resultType="com.xupt.outpatientms.bean.Record">
+        SELECT
+               doctor_name              AS "doctorName",
+               doctor.department_name   AS "departmentName",
+               department_pos           AS "departmentPos",
+               user_name                AS "userName",
+               user_gender              AS "userGender",
+               user_age                 AS "userAge"
+        FROM doctor, department, user
+        WHERE EXISTS (SELECT * FROM schedule WHERE doctor_id = #{doctorId} AND workday = #{workday})
+                AND doctor_id = #{doctorId}
+                AND doctor.department_name = department.department_name
+                AND user_id = #{userId}
+        ;
+    </select>
+
+    <insert id="createRecord" parameterType="com.xupt.outpatientms.bean.Record"
+            useGeneratedKeys="true" keyProperty="recordId">
+        INSERT INTO record
+            (record_status, record_create_time, record_date, record_time,
+             record_fare, department_name, department_pos, doctor_id, user_id,
+             user_name, user_gender, user_age, medical_record)
+        VALUES (#{recordStatus},#{recordCreateTime},#{recordDate},#{recordTime},
+                #{recordFare},#{departmentName},#{departmentPos},#{doctorId},#{userId},
+                #{userName},#{userGender},#{userAge},#{medicalRecord})
+        ;
+    </insert>
+
+    <select id="getRecord" resultType="com.xupt.outpatientms.bean.Record">
+        SELECT * FROM record WHERE record_id = #{recordId};
+    </select>
+
+    <update id="payRecord">
+        UPDATE record
+        SET record_status = 1, record_order = #{order}
+        WHERE record_id = #{recordId}
+        ;
+    </update>
+
+    <update id="checkExpireRecord">
+        UPDATE record
+        SET record_status = 2
+        WHERE record_id = #{recordId}
+            AND record_status = 0
+            AND TIMEDIFF(CURRENT_TIME(), TIME(record_create_time)) > SEC_TO_TIME(900)
+        ;
+    </update>
+
+    <select id="listRecord" resultType="com.xupt.outpatientms.bean.Record">
+        SELECT * FROM record WHERE user_id = #{userId}
     </select>
 
 </mapper>

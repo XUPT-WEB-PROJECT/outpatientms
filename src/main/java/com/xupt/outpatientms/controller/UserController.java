@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindingResult;
@@ -123,7 +124,7 @@ public class UserController {
                     "15955897607\n")
     @RequestMapping(value = "checkUserTelUnique", method = RequestMethod.GET)
     public ResponseBuilder<Integer> checkUserTelUnique(String userTel){
-        if(!userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
+        if(StringUtils.isEmpty(userTel) || !userTel.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")){
             return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "手机号码有误");
         }
         if(userService.checkUserTelUnique(userTel)) return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "该电话号码已注册", 0);
