@@ -46,11 +46,11 @@
             useGeneratedKeys="true" keyProperty="recordId">
         INSERT INTO record
             (record_status, record_create_time, record_date, record_time,
-             record_fare, department_name, department_pos, doctor_id, user_id,
-             user_name, user_gender, user_age, medical_record)
+             record_fare, department_name, department_pos, doctor_id, doctor_name,
+             user_id, user_name, user_gender, user_age, medical_record)
         VALUES (#{recordStatus},#{recordCreateTime},#{recordDate},#{recordTime},
-                #{recordFare},#{departmentName},#{departmentPos},#{doctorId},#{userId},
-                #{userName},#{userGender},#{userAge},#{medicalRecord})
+                #{recordFare},#{departmentName},#{departmentPos},#{doctorId},#{doctorName},
+                #{userId},#{userName},#{userGender},#{userAge},#{medicalRecord})
         ;
     </insert>
 
@@ -68,14 +68,52 @@
     <update id="checkExpireRecord">
         UPDATE record
         SET record_status = 2
-        WHERE record_id = #{recordId}
+        WHERE user_id = #{userId}
             AND record_status = 0
             AND TIMEDIFF(CURRENT_TIME(), TIME(record_create_time)) > SEC_TO_TIME(900)
         ;
     </update>
 
     <select id="listRecord" resultType="com.xupt.outpatientms.bean.Record">
-        SELECT * FROM record WHERE user_id = #{userId}
+        SELECT * FROM record WHERE user_id = #{userId} AND record_status != 5
     </select>
+
+    <update id="delRecord">
+        UPDATE record SET record_status = 5 WHERE record_id = #{recordId} AND user_id = #{userId};
+    </update>
+
+    <update id="updateRecordStatus">
+        UPDATE record
+        SET  record_status = #{recordStatus}
+        <where>
+            <if test="previousStatus!=null">
+                record_status = #{previousStatus}
+            </if>
+            AND user_id = #{userId}
+            AND record_id = #{recordId}
+        </where>
+        ;
+    </update>
+
+    <select id="setFeedback" parameterType="com.xupt.outpatientms.dto.FeedbackDTO"
+            resultType="com.xupt.outpatientms.bean.Feedback">
+        SELECT
+               user_id      AS "userId",
+               user_name    AS "userName",
+               doctor_id    AS "doctorId",
+               doctor_name  AS "doctorName"
+        FROM record
+        WHERE record_id = #{recordId}
+        ;
+    </select>
+
+    <insert id="commentRecord" parameterType="com.xupt.outpatientms.bean.Feedback">
+        INSERT INTO feedback
+            (user_id, user_name, doctor_id, doctor_name, feedback_time,
+             feedback_rating, feedback_info, record_id)
+        VALUES (#{userId}, #{userName}, #{doctorId}, #{doctorName}, #{feedbackTime},
+                #{feedbackRating}, #{feedbackInfo}, #{recordId})
+        ;
+    </insert>
 
 </mapper>

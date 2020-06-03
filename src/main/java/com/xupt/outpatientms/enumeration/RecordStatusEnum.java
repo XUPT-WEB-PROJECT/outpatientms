@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum RecordStatusEnum implements BaseEnum{
 
-    //0：未付款，1：待就诊，2：已就诊，3：已过期，4：已完成，5：已删除
+    //0：未付款，1：待就诊，2：已过期，3：待评价，4：已完成，5：已删除
     RECORD_UNPAID(0,"未付款"),
     RECORD_UNRESOLVED(1,"待就诊"),
     RECORD_INVALID(2,"已过期"),
