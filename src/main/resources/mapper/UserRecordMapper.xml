@@ -8,4 +8,13 @@
         SELECT * FROM department;
     </select>
 
+    <select id="choseDoctor" resultType="com.xupt.outpatientms.vo.UserChoseDoctorVO">
+        SELECT doctor_name, doctor_gender, doctor_title, doctor_photo, doctor_info, doctor_quota AS 'curQuota'
+        FROM doctor
+        WHERE doctor_id IN
+              (SELECT doctor_id
+                FROM schedule
+                WHERE workday = #{workday})
+    </select>
+
 </mapper>

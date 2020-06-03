@@ -11,5 +11,5 @@ public interface UserRecordService {
 
     public List<Department> choseDepartment();
 
-    List<UserChoseDoctorVO> choseDoctor(String departmentName, String date);
+    List<UserChoseDoctorVO> choseDoctor(String departmentName, Integer workday);
 }

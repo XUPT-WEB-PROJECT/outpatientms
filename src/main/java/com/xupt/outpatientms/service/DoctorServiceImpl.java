@@ -27,15 +27,17 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     @Transactional
-    public boolean review(String phone) {
-        DoctorUnchecked doctorUnchecked = doctorUncheckedMapper.selectByTel(phone);
-        Doctor doctor = new Doctor();
-        BeanUtils.copyProperties(doctorUnchecked,doctor);
+    public boolean review(Doctor doctor) {
         int res1 = doctorMapper.add(doctor);
-        int res2 = doctorUncheckedMapper.deleteByDoctorTel(phone);
+        int res2 = doctorUncheckedMapper.deleteByDoctorTel(doctor.getDoctorTel());
         if (res1 > 0 && res2 > 0){
             return true;
         }
         return false;
+    }
+
+    @Override
+    public DoctorUnchecked checkDoctorUncheckedTel(String phone) {
+        return doctorUncheckedMapper.selectByTel(phone);
     }
 }

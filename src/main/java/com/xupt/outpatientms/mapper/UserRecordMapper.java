@@ -12,6 +12,6 @@ public interface UserRecordMapper {
 
     public List<Department> choseDepartment();
 
-    public List<UserChoseDoctorVO> choseDoctor(@Param("departmentName")String departmentName, @Param("date")String date);
+    public List<UserChoseDoctorVO> choseDoctor(@Param("departmentName")String departmentName, @Param("date")Integer workday);
 
 }

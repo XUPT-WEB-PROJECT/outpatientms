@@ -1,4 +1,5 @@
-package com.xupt.outpatientms.bean;
+package com.xupt.outpatientms.vo;
+
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,14 +11,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-/**
- * Created by BorisLiu on 2020/5/30
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(description = "医生注册信息")
-public class DoctorUnchecked {
+public class DoctorUncheckedVO {
 
     @ApiModelProperty(name = "医生姓名")
     @NotNull(message = "姓名不能为空")
@@ -41,11 +39,6 @@ public class DoctorUnchecked {
     @Pattern(regexp = "^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$",
             message = "请检查电话号码")
     private String doctorTel;//电话号码
-
-    @NotNull(message = "密码不能为空")
-    @Pattern(regexp = "\\w{6,18}",
-            message = "密码长度在6~18之间，只能包含字母、数字和下划线")
-    private String doctorPwd;//登录密码
 
     @ApiModelProperty(name = "医生简介")
     private String doctorInfo;//医生简介
