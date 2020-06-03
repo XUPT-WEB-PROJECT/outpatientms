@@ -3,6 +3,7 @@ package com.xupt.outpatientms.service;
 import com.xupt.outpatientms.bean.Admin;
 import com.xupt.outpatientms.bean.Department;
 import com.xupt.outpatientms.bean.Schedule;
+import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.dto.ScheduleDTO;
 import com.xupt.outpatientms.mapper.AdminMapper;
 import com.xupt.outpatientms.vo.AdminChoseDoctorVO;
@@ -56,6 +57,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Schedule checkSchedule(ScheduleDTO schedule) {
         return adminMapper.checkSchedule(schedule);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return adminMapper.getAllUser();
     }
 
 

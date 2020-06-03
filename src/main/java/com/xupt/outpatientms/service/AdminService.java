@@ -1,9 +1,6 @@
 package com.xupt.outpatientms.service;
 
-import com.xupt.outpatientms.bean.Admin;
-import com.xupt.outpatientms.bean.Department;
-import com.xupt.outpatientms.bean.Doctor;
-import com.xupt.outpatientms.bean.Schedule;
+import com.xupt.outpatientms.bean.*;
 import com.xupt.outpatientms.dto.ScheduleDTO;
 import com.xupt.outpatientms.util.ResponseBuilder;
 import com.xupt.outpatientms.vo.AdminChoseDoctorVO;
@@ -29,4 +26,6 @@ public interface AdminService {
     int delSchedule(ScheduleDTO schedule);
 
     Schedule checkSchedule(ScheduleDTO schedule);
+
+    List<User> getAllUser();
 }

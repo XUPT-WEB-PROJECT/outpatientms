@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/user/register","/user/login","/user/checkUserTelUnique")
                 .excludePathPatterns("/doctor/login","/doctor/review/**")
                 .excludePathPatterns("/doctorUnchecked/**")
-                .excludePathPatterns("/doctorRecord/**")
+//                .excludePathPatterns("/doctorRecord/**")
                 .excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/webjars/**","/swagger-ui.html/**","/v2/**");
     }
 
