@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.mapper;
 
 import com.xupt.outpatientms.bean.DoctorUnchecked;
+import com.xupt.outpatientms.vo.DoctorUncheckedVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,7 +15,7 @@ public interface DoctorUncheckedMapper {
     // 添加医生（未审核）
     Integer add(DoctorUnchecked doctorUnchecked);
 
-    List<DoctorUnchecked> selectAll();
+    List<DoctorUncheckedVO> selectAll();
 
     Integer deleteByDoctorTel(@Param("doctorTel")String doctorTel);
 

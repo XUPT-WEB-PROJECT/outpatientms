@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class AuthorityInterceptor implements HandlerInterceptor {
@@ -49,10 +49,12 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                 Optional<Claims> claimsOptional = jwtService.parseToken(token);
                 //合法 token
                 if (claimsOptional.isPresent()){
-                    String userId = claimsOptional.get().getSubject();
-                    if (BooleanUtils.isTrue(redisTemplate.hasKey(String.format(JwtService.USER_JWT_KEY,userId)))){
+                    String id = claimsOptional.get().getSubject();
+                    String key = String.format(JwtService.USER_JWT_KEY,id);
+                    if (BooleanUtils.isTrue(redisTemplate.hasKey(key))){
+                        redisTemplate.expire(key, 3600, TimeUnit.SECONDS);
                         CurrentUserData currentUserData = new CurrentUserData();
-                        currentUserData.setUserId(userId);
+                        currentUserData.setId(id);
                         request.setAttribute("currentUser", currentUserData);
                         return true;
                     }
@@ -62,8 +64,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         logger.warn("Wrong authorization: {}", header);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
+        response.sendRedirect("/xuptcd/unauthorized");
+        return true;
     }
 
 }

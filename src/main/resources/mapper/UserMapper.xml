@@ -62,7 +62,7 @@
         ;
     </update>
 
-    <select id="" resultType="com.xupt.outpatientms.vo.UserVO">
+    <select id="getUserInfo" resultType="com.xupt.outpatientms.vo.UserVO">
         SELECT * FROM user WHERE user_id = #{userId};
     </select>
 

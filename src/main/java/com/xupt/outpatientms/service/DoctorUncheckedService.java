@@ -2,6 +2,7 @@ package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.DoctorUnchecked;
 import com.xupt.outpatientms.dto.DoctorUncheckedDTO;
+import com.xupt.outpatientms.vo.DoctorUncheckedVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
 @Service
 public interface DoctorUncheckedService {
     public Integer register(DoctorUncheckedDTO doctorUnchecked);
-    public List<DoctorUnchecked> list();
+    public List<DoctorUncheckedVO> list();
     public boolean deleteByDoctorTel(String doctorTel);
 }

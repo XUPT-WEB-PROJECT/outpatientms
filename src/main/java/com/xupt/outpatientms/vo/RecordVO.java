@@ -1,8 +1,7 @@
-package com.xupt.outpatientms.bean;
+package com.xupt.outpatientms.vo;
 
 import com.xupt.outpatientms.enumeration.GenderEnum;
 import com.xupt.outpatientms.enumeration.RecordStatusEnum;
-import com.xupt.outpatientms.enumeration.TimeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -15,28 +14,26 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "预约挂号的订单信息")
-public class Record {
+@ApiModel(description = "挂号单基本信息")
+public class RecordVO {
 
-    @ApiModelProperty(value = "订单id")
+    @ApiModelProperty(value = "订单号")
     private String recordId;
 
     @ApiModelProperty(value = "预约订单状态 0：未付款，1：待就诊，2：已就诊，3：已失效，4：已完成，5：已删除")
     private RecordStatusEnum recordStatus;
 
     @ApiModelProperty(value = "订单创建时间")
+    @Past
     private Date recordCreateTime;
 
     @ApiModelProperty(value = "预约就诊日期")
     @NotNull(message = "就诊日期不能为空！")
-    private String recordDate;
-
-    @ApiModelProperty(value = "预约就诊时段(0：上午，1：下午)")
-    @NotNull(message = "就诊时段不能为空！")
-    private TimeEnum recordTime;
+    @FutureOrPresent
+    private Date recordDate;
 
     @ApiModelProperty(value = "就诊当日序号")
-    private Integer recordOrder;
+    private Date recordOrder;
 
     @ApiModelProperty(value = "挂号费，整数，5~50")
     @Min(5)
@@ -50,11 +47,9 @@ public class Record {
     @ApiModelProperty(value = "所属科室位置")
     private String departmentPos;
 
+    @NotNull(message = "doctorId不能为空")
     @ApiModelProperty(value = "就诊医生ID")
     private String doctorId;
-
-    @ApiModelProperty(value = "就诊医生姓名")
-    private String doctorName;
 
     @ApiModelProperty(value = "患者ID")
     private String userId;

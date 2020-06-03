@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean checkUserTelUnique(String userTel) {
-        return userMapper.checkUserTelUnique(userTel) == 0;
+        return userMapper.checkUserTelUnique(userTel) == 1;
     }
 
     @Override

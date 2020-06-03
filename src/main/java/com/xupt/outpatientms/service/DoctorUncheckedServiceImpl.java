@@ -4,6 +4,7 @@ import com.xupt.outpatientms.bean.DoctorUnchecked;
 import com.xupt.outpatientms.controller.DoctorUncheckedController;
 import com.xupt.outpatientms.dto.DoctorUncheckedDTO;
 import com.xupt.outpatientms.mapper.DoctorUncheckedMapper;
+import com.xupt.outpatientms.vo.DoctorUncheckedVO;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class DoctorUncheckedServiceImpl implements DoctorUncheckedService {
     }
 
     @Override
-    public List<DoctorUnchecked> list() {
+    public List<DoctorUncheckedVO> list() {
         try{
             return doctorUncheckedMapper.selectAll();
         }catch (Exception e){

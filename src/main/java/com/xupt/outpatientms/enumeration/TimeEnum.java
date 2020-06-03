@@ -1,17 +1,13 @@
 package com.xupt.outpatientms.enumeration;
 
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum RecordStatusEnum implements BaseEnum{
+public enum  TimeEnum implements BaseEnum{
 
-    //0：未付款，1：待就诊，2：已就诊，3：已过期，4：已完成，5：已删除
-    RECORD_UNPAID(0,"未付款"),
-    RECORD_UNRESOLVED(1,"待就诊"),
-    RECORD_INVALID(2,"已过期"),
-    RECORD_COMMENTING(3,"待评价"),
-    RECORD_COMPLETED(4,"已完成"),//评分后
-    RECORD_DELETED(5,"已删除"),
+    TIME_AM(0,"am"),
+    TIME_PM(1,"pm")
     ;
 
     private int value;
@@ -19,7 +15,7 @@ public enum RecordStatusEnum implements BaseEnum{
     @JsonValue
     private String desc;
 
-    RecordStatusEnum(int value, String desc){
+    TimeEnum(int value, String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -36,7 +32,7 @@ public enum RecordStatusEnum implements BaseEnum{
 
     @JsonCreator
     public static String fromValue(int value){
-        for (RecordStatusEnum g : RecordStatusEnum.values()){
+        for (TimeEnum g : TimeEnum.values()){
             if (g.value == value){
                 return g.desc;
             }

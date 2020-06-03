@@ -6,8 +6,10 @@ import com.xupt.outpatientms.dto.DoctorUncheckedDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
 import com.xupt.outpatientms.service.DoctorUncheckedService;
 import com.xupt.outpatientms.util.ResponseBuilder;
+import com.xupt.outpatientms.vo.DoctorUncheckedVO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by BorisLiu on 2020/5/31
@@ -38,18 +42,18 @@ public class DoctorUncheckedController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public ResponseBuilder<Object> register(@Validated @RequestBody DoctorUncheckedDTO doctorUnchecked, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return new ResponseBuilder(ErrCodeEnum.ERR_ARG,bindingResult.getFieldError().getDefaultMessage());
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG,bindingResult.getFieldError().getDefaultMessage());
         }
         int re = -1;
-        ResponseBuilder rb = new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS,"注册成功");
+        ResponseBuilder<Object> rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"注册成功");
         try {
             re = doctorUncheckedService.register(doctorUnchecked);
             if(re != 1){
-                rb = new ResponseBuilder(ErrCodeEnum.ERR_FAILED);
+                rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED);
             }
         }catch (DataAccessException e){
             logger.error(e.getLocalizedMessage());
-            rb = new ResponseBuilder(ErrCodeEnum.ERR_FAILED,"该电话号码已被注册");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"该电话号码已被注册");
         }
         return rb;
     }
@@ -57,9 +61,8 @@ public class DoctorUncheckedController {
     @ApiOperation(value="查询所有未审核医生",
             notes = "返回所有未审核医生")
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ResponseBuilder<Object> list(){
-        ResponseBuilder rb = new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS,doctorUncheckedService.list());
-        return rb;
+    public ResponseBuilder<List<DoctorUncheckedVO>> list(){
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,doctorUncheckedService.list());
     }
 
 
@@ -67,14 +70,15 @@ public class DoctorUncheckedController {
             notes = "通过电话号码删除未审核医生")
     @RequestMapping(value = "delete/{tel}", method = RequestMethod.DELETE)
     public ResponseBuilder<Object> delete(@PathVariable("tel")String phone){
+        if(StringUtils.isEmpty(phone)
+                || !phone.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")
+        ) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "电话号码不正确");
         boolean flag = doctorUncheckedService.deleteByDoctorTel(phone);
-        ResponseBuilder rb = null;
+        ResponseBuilder<Object> rb = null;
         if (flag){
-             rb = new ResponseBuilder(ErrCodeEnum.ERR_SUCCESS,"删除未审核医生成功！");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"删除未审核医生成功！");
         }else {
-            rb.setErrCode(ErrCodeEnum.ERR_FAILED.getErrCode());
-            rb.setErrMsg("删除未审核医生失败，未通过手机号查找到该医生！");
-            rb.setData(null);
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"删除未审核医生失败，未通过手机号查找到该医生！");
         }
         return rb;
     }
