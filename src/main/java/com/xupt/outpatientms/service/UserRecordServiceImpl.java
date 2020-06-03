@@ -6,6 +6,9 @@ import com.xupt.outpatientms.vo.UserChoseDoctorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,8 +23,8 @@ public class UserRecordServiceImpl implements UserRecordService {
     }
 
     @Override
-    public List<UserChoseDoctorVO> choseDoctor(String departmentName, String date) {
-        return userMapper.choseDoctor(departmentName, date);
+    public List<UserChoseDoctorVO> choseDoctor(String departmentName, Integer workday) {
+        return userMapper.choseDoctor(departmentName, workday);
     }
 
 

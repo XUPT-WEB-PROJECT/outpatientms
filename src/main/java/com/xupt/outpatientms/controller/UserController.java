@@ -208,7 +208,10 @@ public class UserController {
             if(e instanceof org.springframework.dao.DuplicateKeyException){
                 return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"该电话号码已经注册");
             }
-            else e.printStackTrace();
+            else {
+                e.printStackTrace();
+                return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"未知错误：" + e.getClass().getName());
+            }
         }
         if(user.getNewPwd() != null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "原密码错误");
         else return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "更新失败");

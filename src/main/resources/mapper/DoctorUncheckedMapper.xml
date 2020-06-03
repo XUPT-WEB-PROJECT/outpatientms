@@ -23,7 +23,7 @@
         <!--UPDATE user SET user_avatar=#{avatarUrl} WHERE user_id=#{userId};-->
     <!--</update>-->
 
-    <select id="selectAll" resultType="com.xupt.outpatientms.bean.DoctorUnchecked">
+    <select id="selectAll" resultType="com.xupt.outpatientms.vo.DoctorUncheckedVO">
         SELECT * FROM `doctor_unchecked`;
     </select>
 

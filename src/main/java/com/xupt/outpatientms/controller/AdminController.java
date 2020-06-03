@@ -68,8 +68,8 @@ public class AdminController {
 
     @ApiOperation(value="管理员获取科室全部医生信息，用于排班",
             notes = "获取医生信息接口，用于为医生排班，接口调用成功errCode=0，否则错误信息保存在errMsg中。\n")
-    @ApiImplicitParam(name = "departmentName", value = "eg:呼吸科")
-    @RequestMapping(value = "choseDoctor/{departmentName}", method = RequestMethod.GET)
+    @ApiImplicitParam(name = "departmentName", value = "eg:呼吸科", paramType = "path")
+    @RequestMapping(value = "/choseDoctor/{departmentName}", method = RequestMethod.GET)
     public ResponseBuilder<List<AdminChoseDoctorVO>> choseDoctor(@PathVariable(value = "departmentName") String departmentName) {
         if(!adminService.checkDepartment(departmentName)) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "请检查科室名");
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", adminService.choseDoctor(departmentName));
@@ -77,7 +77,7 @@ public class AdminController {
 
     @ApiOperation(value="查看科室排班情况",
             notes = "接口调用成功errCode=0，排班信息返回在data字段，否则错误信息返回至errMsg\n")
-    @RequestMapping(value = "getSchedule/{departmentName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getSchedule/{departmentName}", method = RequestMethod.GET)
     public ResponseBuilder<List<Schedule>> getSchedule(@PathVariable(value = "departmentName") String departmentName){
         if(!adminService.checkDepartment(departmentName)) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "请检查科室名");
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", adminService.getSchedule(departmentName));
@@ -112,8 +112,8 @@ public class AdminController {
             value = "eg:\n"+
                     "{\n" +
                     "\t\"departmentName\": \"内科\",\n" +
-                    "\t\"doctorId\": \"内科医生1\",\n" +
-                    "\t\"weekDay\": \"1\"\n" +
+                    "\t\"doctorId\": \"0000010041\",\n" +
+                    "\t\"workday\": \"1\"\n" +
                     "}\n")
     @RequestMapping(value = "delSchedule", method = RequestMethod.POST)
     public ResponseBuilder<ScheduleDTO> delSchedule(@Validated @RequestBody ScheduleDTO schedule, BindingResult bindingResult){

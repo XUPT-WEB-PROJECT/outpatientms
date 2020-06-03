@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.controller;
 
 import com.xupt.outpatientms.bean.Doctor;
+import com.xupt.outpatientms.bean.DoctorUnchecked;
 import com.xupt.outpatientms.bean.User;
 import com.xupt.outpatientms.common.Token;
 import com.xupt.outpatientms.dto.DoctorLoginDTO;
@@ -13,6 +14,7 @@ import com.xupt.outpatientms.vo.DoctorVO;
 import com.xupt.outpatientms.vo.UserVO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -56,14 +58,20 @@ public class DoctorController {
     }
 
 
-    @ApiOperation(value="审核医生",
-            notes = "审核医生")
+    @ApiOperation(value="审核医生注册信息", notes = "将医生注册信息转换为正式医生信息，审核成功errCode = 0，并将删去的审核信息保存至data字段，否则错误信息保存在errMsg")
     @RequestMapping(value = "review/{tel}", method = RequestMethod.POST)
-    public ResponseBuilder<Object> review(@PathVariable("tel")String phone){
-        boolean flag = doctorService.review(phone);
-        ResponseBuilder<Object> rb = null;
+    public ResponseBuilder<DoctorUnchecked> review(@PathVariable("tel")String phone){
+        if(StringUtils.isEmpty(phone)
+               || !phone.matches("^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$")
+        ) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "电话号码不正确");
+        DoctorUnchecked unchecked = doctorService.checkDoctorUncheckedTel(phone);
+        if(unchecked == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"电话号码不正确");
+        Doctor doctor = new Doctor();
+        BeanUtils.copyProperties(unchecked,doctor);
+        boolean flag = doctorService.review(doctor);
+        ResponseBuilder<DoctorUnchecked> rb = null;
         if (flag){
-            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"审核成功！");
+            rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"审核成功！", unchecked);
         }else {
             rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"审核失败！");
         }

@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.service;
 
 import com.xupt.outpatientms.bean.Doctor;
+import com.xupt.outpatientms.bean.DoctorUnchecked;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,5 +11,7 @@ import org.springframework.stereotype.Service;
 public interface DoctorService {
     public Doctor login(String doctorTel,String doctorPwd);
 
-    boolean review(String phone);
+    boolean review(Doctor doctor);
+
+    DoctorUnchecked checkDoctorUncheckedTel(String phone);
 }

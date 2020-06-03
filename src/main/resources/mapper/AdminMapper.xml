@@ -34,7 +34,7 @@
         DELETE FROM schedule
         WHERE department_name = #{departmentName}
                 AND doctor_id = #{doctorId}
-                AND workday = #{doctorName}
+                AND workday = #{workday}
         ;
     </delete>
 
