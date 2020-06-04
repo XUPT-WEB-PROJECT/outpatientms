@@ -35,4 +35,9 @@ public class DoctorRecordServiceImpl implements DoctorRecordService {
         return doctorRecordMapper.getTodayAllRecord(doctorId,recordDate);
     }
 
+    @Override
+    public Record getRecord(String recordId) {
+        return doctorRecordMapper.getRecord(recordId);
+    }
+
 }

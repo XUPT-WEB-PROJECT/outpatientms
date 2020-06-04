@@ -1,7 +1,9 @@
 package com.xupt.outpatientms.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.xupt.outpatientms.bean.Record;
 import com.xupt.outpatientms.common.CurrentUserData;
+import com.xupt.outpatientms.dto.MedicalRecordDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
 import com.xupt.outpatientms.service.DoctorRecordService;
 import com.xupt.outpatientms.util.ResponseBuilder;
@@ -39,8 +41,47 @@ public class DoctorRecordController {
     public ResponseBuilder<List<Record>> writeRecord(@RequestBody String medicalRecord,@PathVariable("recordId") String recordId,@PathVariable("userId")String userId, @PathVariable("doctorId")String doctorId,ServletRequest request){
         CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
         if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
-        boolean flag = doctorRecordService.writeMedicalRecord(medicalRecord,recordId,userId,doctorId);
+        String realMedicalRecord = null;
+        int i = medicalRecord.indexOf("\"conditionDescription\":\"") + "\"conditionDescription\":\"".length();
+        if(i < "\"conditionDescription\":\"".length()) realMedicalRecord =  "诊断记录记录失败";
+        else {
+            int end = medicalRecord.indexOf(":");
+            realMedicalRecord = medicalRecord.substring(i, end);
+        }
+        boolean flag = doctorRecordService.writeMedicalRecord(realMedicalRecord,recordId,userId,doctorId);
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, flag ? "追加诊断记录成功":"追加诊断记录失败" );
+    }
+
+    @ApiOperation(value="医生追加诊断记录", notes = "追加成功返回订单信息")
+    @ApiImplicitParam(name = "medicalRecord", dataType = "application/json",
+    value = "eg:" +
+            "{\n" +
+            "    \"recordId\": \"0000\", \n" +
+            "    \"doctorId\": \"0000\", \n" +
+            "    \"userId\": \"0000\", \n" +
+            "    \"medicalRecord\": \"多喝热水\"\n" +
+            "}")
+    @RequestMapping(value = "updateMedicalRecord",method =  RequestMethod.POST)
+    public ResponseBuilder<Record> updateMedicalRecord(@RequestBody MedicalRecordDTO medicalRecord, ServletRequest request){
+        CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
+        if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
+        if(!data.getId().equals(medicalRecord.getDoctorId())
+            || medicalRecord.getMedicalRecord() == null
+                || medicalRecord.getRecordId() == null
+                || medicalRecord.getUserId() == null
+        ){
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "参数有误");
+        }
+        boolean flag = doctorRecordService.writeMedicalRecord(medicalRecord.getMedicalRecord(),
+                medicalRecord.getRecordId(),
+                medicalRecord.getUserId(),
+                medicalRecord.getDoctorId());
+        if(flag){
+            Record record = doctorRecordService.getRecord(medicalRecord.getRecordId());
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "追加诊断记录成功", record);
+        }else {
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "追加诊断记录失败");
+        }
     }
 
     @ApiOperation(value="查询该医生今日的全部就诊单",
