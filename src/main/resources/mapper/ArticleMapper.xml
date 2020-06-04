@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xupt.outpatientms.mapper.ArticleMapper">
+
+    <insert id="addArticle" parameterType="com.xupt.outpatientms.bean.Article"
+    useGeneratedKeys="true" keyProperty="articleId">
+        INSERT INTO article
+        (article_title, article_author, article_create_time,
+         article_abbr, article_pic, article_text)
+        VALUES (#{articleTitle}, #{articleAuthor}, #{articleCreateTime},
+                #{articleAbbr}, #{articlePic}, #{articleText});
+    </insert>
+
+    <delete id="delArticle">
+        DELETE FROM article WHERE article_id = #{articleId};
+    </delete>
+
+    <select id="listArticle" resultType="com.xupt.outpatientms.vo.ArticleVO">
+        SELECT
+               article_id           AS "articleId",
+               article_title        AS "articleTitle",
+               article_author       AS "articleAuthor",
+               article_create_time  AS "articleCreateTime",
+               article_abbr         AS "articleAbbr",
+               article_pic          AS "articlePic"
+        FROM article;
+    </select>
+
+    <select id="getArticle" resultType="com.xupt.outpatientms.bean.Article">
+        SELECT * FROM article WHERE article_id = #{articleId};
+    </select>
+
+</mapper>

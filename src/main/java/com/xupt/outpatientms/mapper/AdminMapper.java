@@ -1,9 +1,6 @@
 package com.xupt.outpatientms.mapper;
 
-import com.xupt.outpatientms.bean.Admin;
-import com.xupt.outpatientms.bean.Department;
-import com.xupt.outpatientms.bean.Schedule;
-import com.xupt.outpatientms.bean.User;
+import com.xupt.outpatientms.bean.*;
 import com.xupt.outpatientms.dto.ScheduleDTO;
 import com.xupt.outpatientms.vo.AdminChoseDoctorVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,4 +28,8 @@ public interface AdminMapper {
     Schedule checkSchedule(ScheduleDTO schedule);
 
     List<User> getAllUser();
+
+    List<Schedule> getAllSchedule();
+
+    List<Record> getAllRecord();
 }

@@ -1,6 +1,7 @@
 package com.xupt.outpatientms.vo;
 
 
+import com.xupt.outpatientms.enumeration.GenderEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class DoctorUncheckedVO {
     private String doctorName;//姓名
 
     @ApiModelProperty(name = "医生性别(0：男，1：女，2：保密)")
-    private Integer doctorGender;//性别(0：男，1：女，2：保密)
+    private GenderEnum doctorGender;//性别(0：男，1：女，2：保密)
 
     @ApiModelProperty(name = "医生所属科室")
     private String departmentName;//所属科室，外键

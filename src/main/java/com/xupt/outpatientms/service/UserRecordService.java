@@ -35,4 +35,5 @@ public interface UserRecordService {
 
     int commentRecord(Feedback feedback);
 
+    Feedback getFeedback(String recordId, String userId);
 }

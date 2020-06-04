@@ -40,4 +40,5 @@ public interface UserRecordMapper {
 
     int commentRecord(Integer recordId, Integer userId);
 
+    Feedback getFeedback(String recordId, String userId);
 }

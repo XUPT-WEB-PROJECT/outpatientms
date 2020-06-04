@@ -22,6 +22,7 @@
               (SELECT doctor_id
                 FROM schedule
                 WHERE workday = #{workday})
+        AND department_name = #{departmentName}
         ;
     </select>
     
@@ -115,5 +116,10 @@
                 #{feedbackRating}, #{feedbackInfo}, #{recordId})
         ;
     </insert>
+
+    <select id="getFeedback" resultType="com.xupt.outpatientms.bean.Feedback">
+        SELECT * FROM feedback
+        WHERE record_id = #{recordId} AND user_id = #{userId};
+    </select>
 
 </mapper>
