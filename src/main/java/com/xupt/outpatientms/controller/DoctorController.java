@@ -14,6 +14,7 @@ import com.xupt.outpatientms.vo.DoctorVO;
 import com.xupt.outpatientms.vo.UserVO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class DoctorController {
         if(bindingResult.hasErrors()){
             return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"用户名或密码错误");
         }
-        Doctor d = doctorService.login(doctor.getDoctorTel(),doctor.getDoctorPwd());
+        Doctor d = doctorService.login(doctor.getDoctorTel(),DigestUtils.md5Hex(doctor.getDoctorPwd()));
         if(d!=null){
             Token token = jwtService.refreshToken(d.getDoctorId()+"");
             response.setHeader("Access-Control-Expose-Headers", "Authorization");
@@ -68,8 +69,14 @@ public class DoctorController {
         if(unchecked == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"电话号码不正确");
         Doctor doctor = new Doctor();
         BeanUtils.copyProperties(unchecked,doctor);
-        boolean flag = doctorService.review(doctor);
         ResponseBuilder<DoctorUnchecked> rb = null;
+        boolean flag = false;
+        try{
+             flag = doctorService.review(doctor);
+        }catch (Exception e){
+             rb = new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED,"审核失败！");
+             return rb;
+        }
         if (flag){
             rb = new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS,"审核成功！", unchecked);
         }else {
