@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DoctorVO {
 
+    private Integer doctorId;
     private String doctorName;//姓名
     private String departmentName;//所属科室，外键
     private String doctorTitle;//职称

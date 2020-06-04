@@ -16,4 +16,6 @@ public interface DoctorRecordService {
     public boolean writeMedicalRecord(String medicalRecord,String recordId,String userId, String doctorId);
 
     public List<Record> getTodayAllRecord(String doctorId,String recordDate);
+
+    Record getRecord(String recordId);
 }

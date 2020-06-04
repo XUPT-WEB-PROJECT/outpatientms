@@ -18,4 +18,5 @@ public interface DoctorRecordMapper {
 
     public List<Record> getTodayAllRecord(@Param("doctorId")String doctorId,@Param("recordDate") String recordDate);
 
+    Record getRecord(String recordId);
 }

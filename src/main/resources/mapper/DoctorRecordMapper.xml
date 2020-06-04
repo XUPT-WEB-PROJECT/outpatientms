@@ -26,4 +26,8 @@
         ;
     </update>
 
+    <select id="getRecord" resultType="com.xupt.outpatientms.bean.Record">
+        SELECT * FROM record WHERE record_id = #{recordId};
+    </select>
+
 </mapper>

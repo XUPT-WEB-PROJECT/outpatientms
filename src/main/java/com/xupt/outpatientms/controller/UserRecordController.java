@@ -200,7 +200,7 @@ public class UserRecordController {
         }
         //计算order
         String key = null;
-        if(record.getRecordTime() == TimeEnum.TIME_AM)
+        if(record.getRecordTime() == TimeEnum.TIME_AM)//10045_2020-06-05_am
             key = String.format("%s_%s_am", record.getDoctorId(), record.getRecordDate());
         else
             key = String.format("%s_%s_pm", record.getDoctorId(), record.getRecordDate());
