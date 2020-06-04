@@ -42,11 +42,23 @@
             resultType="com.xupt.outpatientms.bean.Schedule">
         SELECT department_name, doctor_id, doctor_name, #{workday} as workday
         FROM doctor
-        WHERE doctor_id = #{doctorId} AND department_name = #{departmentName};
+        WHERE NOT EXISTS(SELECT * FROM schedule
+                            WHERE department_name = #{departmentName}
+                              AND doctor_id = #{doctorId}
+                              AND workday = #{workday})
+             AND doctor_id = #{doctorId} AND department_name = #{departmentName};
     </select>
 
     <select id="getAllUser" resultType="com.xupt.outpatientms.bean.User">
         SELECT * FROM user;
+    </select>
+
+    <select id="getAllSchedule" resultType="com.xupt.outpatientms.bean.Schedule">
+        SELECT * FROM schedule;
+    </select>
+
+    <select id="getAllRecord" resultType="com.xupt.outpatientms.bean.Record">
+        SELECT * FROM record;
     </select>
 
 </mapper>

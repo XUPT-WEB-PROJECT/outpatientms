@@ -28,4 +28,8 @@ public interface AdminService {
     Schedule checkSchedule(ScheduleDTO schedule);
 
     List<User> getAllUser();
+
+    List<Schedule> getAllSchedule();
+
+    List<Record> getAllRecord();
 }

@@ -83,4 +83,9 @@ public class UserRecordServiceImpl implements UserRecordService {
         return userRecordMapper.commentRecord(feedback.getRecordId(), feedback.getUserId());
     }
 
+    @Override
+    public Feedback getFeedback(String recordId, String userId) {
+        return userRecordMapper.getFeedback(recordId, userId);
+    }
+
 }

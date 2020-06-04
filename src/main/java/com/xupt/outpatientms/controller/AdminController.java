@@ -1,9 +1,6 @@
 package com.xupt.outpatientms.controller;
 
-import com.xupt.outpatientms.bean.Admin;
-import com.xupt.outpatientms.bean.Department;
-import com.xupt.outpatientms.bean.Schedule;
-import com.xupt.outpatientms.bean.User;
+import com.xupt.outpatientms.bean.*;
 import com.xupt.outpatientms.common.Token;
 import com.xupt.outpatientms.dto.ScheduleDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
@@ -134,5 +131,35 @@ public class AdminController {
         for(User user : users) user.setUserPwd("");
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", users);
     }
+
+    @ApiOperation(value="查看所有排班信息",
+            notes = "接口调用成功errCode=0，信息返回在data字段，否则错误信息返回至errMsg\n")
+    @RequestMapping(value = "getAllSchedule", method = RequestMethod.GET)
+    public ResponseBuilder<List<Schedule>> getAllSchedule(){
+        List<Schedule> schedules = adminService.getAllSchedule();
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", schedules);
+    }
+
+    @ApiOperation(value="查看所有预约订单",
+            notes = "接口调用成功errCode=0，信息返回在data字段，否则错误信息返回至errMsg\n")
+    @RequestMapping(value = "getAllRecord", method = RequestMethod.GET)
+    public ResponseBuilder<List<Record>> getAllRecord(){
+        List<Record> schedules = adminService.getAllRecord();
+        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", schedules);
+    }
+
+//    @ApiOperation(value="新增科室",
+//            notes = "接口调用成功errCode=0，新增信息返回在data字段，否则错误信息返回至errMsg\n")
+//    @RequestMapping(value = "addDepartment", method = RequestMethod.GET)
+//    public ResponseBuilder<Department> addDepartment(@Validated @RequestBody Department department,
+//                                                        BindingResult bindingResult){
+//        if(bindingResult.hasErrors()){
+//            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG,bindingResult.getFieldError().getDefaultMessage());
+//        }
+//        if(adminService.checkDepartment(department.getDepartmentName())){
+//            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG,bindingResult.getFieldError().getDefaultMessage());
+//        }
+//        return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "查询成功", users);
+//    }
 
 }

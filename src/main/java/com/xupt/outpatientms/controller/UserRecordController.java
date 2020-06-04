@@ -8,6 +8,7 @@ import com.xupt.outpatientms.bean.Record;
 import com.xupt.outpatientms.common.CurrentUserData;
 import com.xupt.outpatientms.dto.FeedbackDTO;
 import com.xupt.outpatientms.dto.RecordCreateDTO;
+import com.xupt.outpatientms.dto.UserChoseDoctorDTO;
 import com.xupt.outpatientms.enumeration.ErrCodeEnum;
 import com.xupt.outpatientms.enumeration.RecordStatusEnum;
 import com.xupt.outpatientms.enumeration.TimeEnum;
@@ -19,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -59,17 +61,23 @@ public class UserRecordController {
 
     @ApiOperation(value = "用户查询预约医生",
             notes = "用户按科室、日期查询医生信息接口，仅返回当日值班医生，接口调用成功errCode=0，医生信息返回在data字段，否则错误信息返回至errMsg\n")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "departmentName", value = "预约科室"),
-            @ApiImplicitParam(name = "date", value = "预约日期，yyyy-mm-dd格式，范围为第二天起的一周之内")
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "departmentName", dataType = "application/json",
+//                    value = "预约科室\neg:\n" +
+//                            "{\n" +
+//                            "\t\"departmentName\": \"内科\",\n" +
+//                            "\t\"date\": \"2020-06-10\"\n" +
+//                            "}\n"
+//            )
+//    })
     @RequestMapping(value = "choseDoctor", method = RequestMethod.POST)
-    public ResponseBuilder<List<UserChoseDoctorVO>> choseDoctor(String departmentName, String date) {
-        if (StringUtils.isEmpty(departmentName)
-                || StringUtils.isEmpty(date)
-        ) {
-            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "科室或日期不能为空");
+    public ResponseBuilder<List<UserChoseDoctorVO>> choseDoctor(@Validated @RequestBody UserChoseDoctorDTO obj,
+                                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, bindingResult.getFieldError().getDefaultMessage());
         }
+        String departmentName = obj.getDepartmentName();
+        String date = obj.getDate();
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
         Date future = calendar.getTime();
@@ -167,13 +175,13 @@ public class UserRecordController {
 
     @ApiOperation(value = "支付挂号费",
             notes = "支付挂号费，接口调用成功errCode=0，挂号信息返回在data字段中。否则错误信息返回至errMsg\n此时返回信息中的序号为空，支付后得到实际序号")
-    @ApiImplicitParam(name = "recordId", required = true,
+    @ApiImplicitParam(name = "recordId", required = true, paramType = "query",
             value = "预约挂号所需信息\n" +
                     "eg:\n" +
                     "{\n" +
                     "\t\"recordId\": \"1\",\n" +
                     "}\n")
-    @RequestMapping(value = "payRecord", method = RequestMethod.POST)
+    @RequestMapping(value = "payRecord", method = RequestMethod.GET)
     @Transactional
     public ResponseBuilder<Record> payRecord(String recordId, ServletRequest request){
         if(StringUtils.isEmpty(recordId)){
@@ -226,10 +234,10 @@ public class UserRecordController {
     @ApiOperation(value="用户查询自己的预约记录",
             notes = "用户查询预约记录，接口调用成功errCode=0，数据返回在data字段，否则错误信息返回至errMsg\n")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "p", value = "第几页", required = true),
-            @ApiImplicitParam(name = "size", value = "每页的大小", required = true)
+            @ApiImplicitParam(name = "p", value = "第几页", required = true, dataType = "query"),
+            @ApiImplicitParam(name = "size", value = "每页的大小", required = true, dataType = "query")
     })
-    @RequestMapping(value = "listRecord", method = RequestMethod.POST)
+    @RequestMapping(value = "listRecord", method = RequestMethod.GET)
     public ResponseBuilder<PageInfo<Record>> listRecord(int p, int size, ServletRequest request){
         CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
         if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
@@ -242,15 +250,19 @@ public class UserRecordController {
 
     @ApiOperation(value="用户删除自己的预约记录",
             notes = "用户删除预约记录，接口调用成功errCode=0，否则错误信息返回至errMsg\n")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "recordId", value = "recordId", required = true),
-    })
-    @RequestMapping(value = "delRecord", method = RequestMethod.POST)
-    public ResponseBuilder<Object> delRecord(Integer recordId, ServletRequest request){
+    @RequestMapping(value = "/delRecord/{recordId}", method = RequestMethod.POST)
+    public ResponseBuilder<Object> delRecord(@PathVariable("recordId") String recordId, ServletRequest request){
+        if(recordId == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG, "recordId不能为空");
         CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
         if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
         int id = Integer.parseInt(data.getId());
-        int re = userRecordService.delRecord(recordId, id);
+        int rid = -1;
+        try {
+            rid = Integer.parseInt(recordId);
+        }catch (NumberFormatException e){
+            return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
+        }
+        int re = userRecordService.delRecord(rid, id);
         if(re == 0) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "删除成功");
     }
@@ -283,5 +295,17 @@ public class UserRecordController {
         int re = userRecordService.commentRecord(f);
         if(re == 0) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
         return new ResponseBuilder<>(ErrCodeEnum.ERR_SUCCESS, "评论成功");
+    }
+
+    @ApiOperation(value="用户查看自己的评价",
+            notes = "接口调用成功errCode=0，数据返回至data，否则错误信息返回至errMsg\n")
+    @RequestMapping(value = "/getComment/{recordId}", method = RequestMethod.GET)
+    public ResponseBuilder<Feedback> getFeedback(@PathVariable("recordId")String recordId,
+                                                 ServletRequest request){
+        CurrentUserData data = (CurrentUserData) request.getAttribute("currentUser");
+        if (data == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_FAILED, "获取登录信息失败");
+        Feedback feedback = userRecordService.getFeedback(recordId, data.getId());
+        if(feedback == null) return new ResponseBuilder<>(ErrCodeEnum.ERR_ARG);
+        return new ResponseBuilder<Feedback>(ErrCodeEnum.ERR_SUCCESS,"查询成功",feedback);
     }
 }
