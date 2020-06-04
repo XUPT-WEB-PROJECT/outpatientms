@@ -80,7 +80,7 @@ public class UserRecordServiceImpl implements UserRecordService {
                 RecordStatusEnum.RECORD_COMPLETED.value(),
                 RecordStatusEnum.RECORD_COMMENTING.value());
         if(re == 0) return re;
-        return userRecordMapper.commentRecord(feedback.getRecordId(), feedback.getUserId());
+        return userRecordMapper.commentRecord(feedback);
     }
 
     @Override

@@ -26,7 +26,7 @@ public interface UserRecordMapper {
 
     int payRecord(Integer recordId, Integer order);
 
-    int updateRecordStatus(@Param("recordId")Integer recordId, @Param("order")Integer order,
+    int updateRecordStatus(@Param("recordId")Integer recordId, @Param("userId")Integer userId,
                            @Param("recordStatus")Integer recordStatus,
                            @Param("previousStatus")Integer previousStatus);
 
@@ -38,7 +38,7 @@ public interface UserRecordMapper {
 
     Feedback setFeedback(FeedbackDTO feedback);
 
-    int commentRecord(Integer recordId, Integer userId);
+    int commentRecord(Feedback feedback);
 
     Feedback getFeedback(String recordId, String userId);
 }
